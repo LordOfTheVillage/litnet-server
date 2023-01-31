@@ -16,4 +16,19 @@ export class UsersService {
     const users = await this.userRepository.findAll();
     return users;
   }
+
+  async getUserByEmail(email: string) {
+    return this.getUserByProperty('email', email);
+  }
+
+  async getUserByName(name: string) {
+    return this.getUserByProperty('name', name);
+  }
+
+  private async getUserByProperty(property: string, value: string) {
+    const user = await this.userRepository.findOne({
+      where: { [property]: value },
+    });
+    return user;
+  }
 }
