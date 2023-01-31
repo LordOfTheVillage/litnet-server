@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Book } from 'src/books/books.model';
 
 interface UserCreationAttrs {
   name: string;
@@ -24,4 +25,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @Column({ type: DataType.STRING, allowNull: false })
   password: string;
+
+  @HasMany(() => Book)
+  books: Book[];
 }
