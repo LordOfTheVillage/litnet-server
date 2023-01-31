@@ -4,6 +4,7 @@ import { Book } from 'src/books/books.model';
 interface UserCreationAttrs {
   name: string;
   email: string;
+  img: string;
   password: string;
 }
 
@@ -25,6 +26,9 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @Column({ type: DataType.STRING, allowNull: false })
   password: string;
+
+  @Column({ type: DataType.STRING })
+  img: string;
 
   @HasMany(() => Book)
   books: Book[];
