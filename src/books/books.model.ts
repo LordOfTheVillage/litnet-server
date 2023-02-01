@@ -12,9 +12,10 @@ import { Genre } from 'src/genre/genre.model';
 import { User } from 'src/users/user.model';
 
 interface BookCreationAttrs {
-  name: string;
-  email: string;
-  password: string;
+  title: string;
+  img: string;
+  userId: number;
+  genres: string[];
 }
 
 @Table({ tableName: 'books' })
@@ -29,6 +30,9 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   title: string;
+
+  @Column({ type: DataType.STRING })
+  img: string;
 
   @ForeignKey(() => User)
   // @BelongsTo(() => User)

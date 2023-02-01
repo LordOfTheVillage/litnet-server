@@ -7,6 +7,7 @@ import { User } from 'src/users/user.model';
 import { Genre } from 'src/genre/genre.model';
 import { BookGenre } from 'src/genre/book-genre.model';
 import { GenreModule } from 'src/genre/genre.module';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
   providers: [BooksService],
@@ -14,6 +15,7 @@ import { GenreModule } from 'src/genre/genre.module';
   imports: [
     SequelizeModule.forFeature([Book, User, Genre, BookGenre]),
     GenreModule,
+    FileModule,
   ],
 })
 export class BooksModule {}
