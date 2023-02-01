@@ -3,11 +3,13 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { BookGenre } from 'src/genre/book-genre.model';
 import { Genre } from 'src/genre/genre.model';
+import { Rating } from 'src/rating/rating.model';
 import { User } from 'src/users/user.model';
 
 interface BookCreationAttrs {
@@ -40,4 +42,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @BelongsToMany(() => Genre, () => BookGenre)
   genres: Genre[];
+
+  @HasMany(() => Rating)
+  ratings: Rating[];
 }

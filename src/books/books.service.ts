@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FileService } from 'src/file/file.service';
 import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
+import { UsersService } from 'src/users/users.service';
 import { Book } from './books.model';
 import { CreateBookDto } from './dto/create-book.dto';
 
@@ -13,26 +14,14 @@ export class BooksService {
     private bookRepository: typeof Book,
     private genreService: GenreService,
     private fileService: FileService,
+    private userService: UsersService,
   ) {}
 
-  // async createBook(dto: CreateBookDto) {
-  //   // const book = await this.bookRepository.create(dto);
-  //   const names = dto.genres;
-  //   const genreObjects: Genre[] = await Promise.all(
-  //     names.map((name) => this.genreService.getGenreByName(name)),
-  //   )
-  //   const book = await this.bookRepository.create({...dto, genres: genreObjects});
-  //   return book;
-  // }
   async createBook({ genres, ...dto }: CreateBookDto, img: any) {
+    await this.validateUser(dto.userId);
+    
     const fileName = await this.fileService.createFile(img);
-    // const genresArray = genres.split(',');
-    // const genreObjects: Genre[] = await Promise.all(
-    //   genresArray.map((name) => this.genreService.getGenreByName(name)),
-    // );
-    // const book = await this.bookRepository.create({ ...dto, img: fileName });
-    // book.genres = genreObjects;
-    // return await book.save();
+
     const genresArray = genres.split(',');
     const genreObjects: Genre[] = await Promise.all(
       genresArray.map((name) => this.genreService.getGenreByName(name)),
@@ -45,5 +34,12 @@ export class BooksService {
   async getAllBooks() {
     const books = await this.bookRepository.findAll({ include: { all: true } });
     return books;
+  }
+
+  private async validateUser(id: number) {
+    const user = await this.userService.getUserById(id);
+    if (!user) {
+      throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+    }
   }
 }

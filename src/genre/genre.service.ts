@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './genre.model';
@@ -14,11 +14,17 @@ export class GenreService {
 
   async getGenreById(id: number) {
     const genre = await this.genreRepository.findByPk(id);
+    if (!genre) {
+      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
+    }
     return genre;
   }
 
   async getGenreByName(name: string) {
     const genre = await this.genreRepository.findOne({ where: { name } });
+    if (!genre) {
+      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
+    }
     return genre;
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreService } from './genre.service';
 
@@ -11,10 +11,10 @@ export class GenreController {
     return this.genreService.createGenre(dto);
   }
 
-  @Get('/:id')
-  getById(@Param('id') id: number | string) {
-    return this.genreService.getGenreById(+id);
-  }
+  // @Get('/:id')
+  // getById(@Param('id', ParseIntPipe) id: number) {
+  //   return this.genreService.getGenreById(id);
+  // }
 
   @Get('/:name')
   getByName(@Param('name') name: string) {
