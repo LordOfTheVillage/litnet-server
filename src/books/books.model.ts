@@ -1,5 +1,4 @@
 import {
-  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
@@ -13,7 +12,7 @@ import { User } from 'src/users/user.model';
 
 interface BookCreationAttrs {
   title: string;
-  // img: string;
+  img: string;
   userId: number;
   genres: string[];
 }
@@ -31,16 +30,13 @@ export class Book extends Model<Book, BookCreationAttrs> {
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   title: string;
 
-  // @Column({ type: DataType.STRING })
-  // img: string;
+  @Column({ type: DataType.STRING })
+  img: string;
 
   @ForeignKey(() => User)
   // @BelongsTo(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
   userId: number;
-
-  // @Column({ type: DataType.STRING, unique: true, allowNull: false })
-  // genre: string;
 
   @BelongsToMany(() => Genre, () => BookGenre)
   genres: Genre[];

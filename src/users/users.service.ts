@@ -10,7 +10,7 @@ export class UsersService {
     @InjectModel(User) private userRepository: typeof User,
     private fileService: FileService,
   ) {}
-  
+
   async createUser(dto: CreateUserDto, img?: any) {
     const fileName = await this.fileService.createFile(img);
     const user = await this.userRepository.create({ ...dto, img: fileName });
@@ -18,7 +18,7 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.userRepository.findAll();
+    const users = await this.userRepository.findAll({ include: { all: true } });
     return users;
   }
 

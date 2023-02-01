@@ -14,19 +14,19 @@ import { CreateBookDto } from './dto/create-book.dto';
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  // @Post()
-  // @UseInterceptors(FileInterceptor('img'))
-  // create(
-  //   @Body() dto: CreateBookDto,
-  //   @UploadedFile() img: Express.Multer.File,
-  // ) {
-  //   return this.booksService.createBook(dto, img);
-  // }
-
   @Post()
-  create(@Body() dto: CreateBookDto) {
-    return this.booksService.createBook(dto);
+  @UseInterceptors(FileInterceptor('img'))
+  create(
+    @Body() dto: CreateBookDto,
+    @UploadedFile() img: Express.Multer.File,
+  ) {
+    return this.booksService.createBook(dto, img);
   }
+
+  // @Post()
+  // create(@Body() dto: CreateBookDto) {
+  //   return this.booksService.createBook(dto);
+  // }
 
   @Get()
   getAll() {

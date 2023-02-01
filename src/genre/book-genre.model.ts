@@ -9,9 +9,7 @@ import {
 import { Book } from 'src/books/books.model';
 import { Genre } from './genre.model';
 
-interface BookGenreCreationAttrs {
-  name: string;
-}
+interface BookGenreCreationAttrs {}
 
 @Table({ tableName: 'book_genre', createdAt: false, updatedAt: false })
 export class BookGenre extends Model<BookGenre, BookGenreCreationAttrs> {

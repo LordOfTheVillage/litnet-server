@@ -24,8 +24,8 @@ export class BooksService {
   //   const book = await this.bookRepository.create({...dto, genres: genreObjects});
   //   return book;
   // }
-  async createBook({ genres, ...dto }: CreateBookDto) {
-    // const fileName = await this.fileService.createFile(img);
+  async createBook({ genres, ...dto }: CreateBookDto, img: any) {
+    const fileName = await this.fileService.createFile(img);
     // const genresArray = genres.split(',');
     // const genreObjects: Genre[] = await Promise.all(
     //   genresArray.map((name) => this.genreService.getGenreByName(name)),
@@ -33,18 +33,17 @@ export class BooksService {
     // const book = await this.bookRepository.create({ ...dto, img: fileName });
     // book.genres = genreObjects;
     // return await book.save();
-    console.log(dto)
     const genresArray = genres.split(',');
     const genreObjects: Genre[] = await Promise.all(
       genresArray.map((name) => this.genreService.getGenreByName(name)),
     );
-    const book = await this.bookRepository.create({ ...dto});
-    book.genres = genreObjects;
-    return await book.save();
+    const book = await this.bookRepository.create({ ...dto, img: fileName });
+    await book.$set('genres', genreObjects);
+    return book;
   }
 
   async getAllBooks() {
-    const books = await this.bookRepository.findAll();
+    const books = await this.bookRepository.findAll({ include: { all: true } });
     return books;
   }
 }
