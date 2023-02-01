@@ -10,5 +10,6 @@ import { GenreService } from './genre.service';
   controllers: [GenreController],
   providers: [GenreService],
   imports: [SequelizeModule.forFeature([Genre, Book, BookGenre])],
+  exports: [GenreService],
 })
 export class GenreModule {}

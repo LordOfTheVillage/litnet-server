@@ -8,13 +8,17 @@ export class GenreController {
 
   @Post()
   create(@Body() dto: CreateGenreDto) {
-    console.log(dto);
     return this.genreService.createGenre(dto);
   }
 
   @Get('/:id')
   getById(@Param('id') id: number | string) {
     return this.genreService.getGenreById(+id);
+  }
+
+  @Get('/:name')
+  getByName(@Param('name') name: string) {
+    return this.genreService.getGenreByName(name);
   }
 
   @Get()

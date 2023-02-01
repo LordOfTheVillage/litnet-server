@@ -17,6 +17,11 @@ export class GenreService {
     return genre;
   }
 
+  async getGenreByName(name: string) {
+    const genre = await this.genreRepository.findOne({ where: { name } });
+    return genre;
+  }
+
   async getAllGenres() {
     const genres = await this.genreRepository.findAll();
     return genres;

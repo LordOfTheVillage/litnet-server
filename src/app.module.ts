@@ -30,6 +30,7 @@ import { BookGenre } from './genre/book-genre.model';
       database: process.env.POSTGRES_DB,
       models: [User, Book, Genre, BookGenre],
       autoLoadModels: true,
+      synchronize: true,
     }),
     UsersModule,
     BooksModule,
