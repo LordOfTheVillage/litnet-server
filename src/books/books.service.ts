@@ -33,7 +33,7 @@ export class BooksService {
     // const book = await this.bookRepository.create({ ...dto, img: fileName });
     // book.genres = genreObjects;
     // return await book.save();
-    console.log(genres)
+    console.log(dto)
     const genresArray = genres.split(',');
     const genreObjects: Genre[] = await Promise.all(
       genresArray.map((name) => this.genreService.getGenreByName(name)),
