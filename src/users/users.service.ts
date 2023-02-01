@@ -10,9 +10,9 @@ export class UsersService {
     @InjectModel(User) private userRepository: typeof User,
     private fileService: FileService,
   ) {}
-
+  
   async createUser(dto: CreateUserDto, img?: any) {
-    const fileName = img ? await this.fileService.createFile(img) : null;
+    const fileName = await this.fileService.createFile(img);
     const user = await this.userRepository.create({ ...dto, img: fileName });
     return user;
   }

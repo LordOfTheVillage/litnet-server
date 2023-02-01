@@ -8,7 +8,10 @@ import { Book } from './books/books.model';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { GenreModule } from './genre/genre.module';
 import * as path from 'path';
+import { Genre } from './genre/genre.model';
+import { BookGenre } from './genre/book-genre.model';
 
 @Module({
   imports: [
@@ -25,13 +28,14 @@ import * as path from 'path';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Book],
+      models: [User, Book, Genre, BookGenre],
       autoLoadModels: true,
     }),
     UsersModule,
     BooksModule,
     AuthModule,
     FileModule,
+    GenreModule,
   ],
 })
 export class AppModule {}

@@ -4,8 +4,8 @@ import { Book } from 'src/books/books.model';
 interface UserCreationAttrs {
   name: string;
   email: string;
-  img: string;
   password: string;
+  img: string;
 }
 
 @Table({ tableName: 'users' })
@@ -18,13 +18,13 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   id: number;
 
-  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  @Column({ type: DataType.STRING, unique: true, allowNull: true })
   name: string;
 
-  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  @Column({ type: DataType.STRING, unique: true, allowNull: true })
   email: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: true })
   password: string;
 
   @Column({ type: DataType.STRING })
