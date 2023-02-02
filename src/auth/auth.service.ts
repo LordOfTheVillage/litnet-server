@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt/dist';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
+import { AuthUserDto } from './dto/auth-user.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class AuthService {
@@ -16,19 +18,25 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: CreateUserDto) {
+  async login(dto: AuthUserDto) {
     const user = await this.validateUser(dto);
     return this.generateToken(user);
   }
 
-  async registration(dto: CreateUserDto) {
+  async registration(dto: CreateUserDto, img?: any) {
     const candidateByEmail = await this.usersService.getUserByEmail(dto.email);
     const candidateByName = await this.usersService.getUserByName(dto.name);
     this.checkUser(candidateByEmail, 'email');
     this.checkUser(candidateByName, 'name');
 
     const hash = await bcrypt.hash(dto.password, 5);
-    const user = await this.usersService.createUser({ ...dto, password: hash });
+    const user = await this.usersService.createUser(
+      {
+        ...dto,
+        password: hash,
+      },
+      img,
+    );
     return this.generateToken(user);
   }
 
@@ -48,9 +56,10 @@ export class AuthService {
     };
   }
 
-  private async validateUser(dto: CreateUserDto) {
+  private async validateUser(dto: AuthUserDto) {
     const user = await this.usersService.getUserByEmail(dto.email);
     const passwordEquals = await bcrypt.compare(dto.password, user.password);
+    // const passwordEquals = dto.password === user.password;
     if (user && passwordEquals) {
       return user;
     }
