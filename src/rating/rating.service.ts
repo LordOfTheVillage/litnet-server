@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateRatingDto } from './dto/create-rating.dto';
+import { PatchRatingDto } from './dto/patch-rating.dto';
 import { Rating } from './rating.model';
 
 @Injectable()
@@ -40,5 +41,31 @@ export class RatingService {
       where: { userId, bookId },
     });
     return rating;
+  }
+
+  async getRatingById(id: number) {
+    const rating = await this.ratingRepository.findByPk(id);
+    this.validateRating(rating);
+    return rating;
+  }
+
+  async deleteRating(id: number) {
+    const rating = await this.ratingRepository.findByPk(id);
+    this.validateRating(rating);
+    await rating.destroy();
+    return rating;
+  }
+
+  async updateRating(dto: PatchRatingDto, id: number) {
+    const rating = await this.ratingRepository.findByPk(id);
+    this.validateRating(rating);
+    await rating.update(dto);
+    return rating;
+  }
+
+  private validateRating(rating: Rating) {
+    if (!rating) {
+      throw new HttpException('Rating not found', HttpStatus.NOT_FOUND);
+    }
   }
 }
