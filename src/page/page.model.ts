@@ -2,21 +2,19 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Book } from 'src/books/books.model';
-import { Page } from 'src/page/page.model';
+import { Chapter } from 'src/chapter/chapter.model';
 
-interface ChapterCreationAttrs {
-  title: string;
+interface PageCreationAttrs {
+  text: string;
   number: number;
-  bookId: number;
+  chapterId: number;
 }
 
-@Table({ tableName: 'chapters' })
-export class Chapter extends Model<Chapter, ChapterCreationAttrs> {
+@Table({ tableName: 'page' })
+export class Page extends Model<Page, PageCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -29,12 +27,9 @@ export class Chapter extends Model<Chapter, ChapterCreationAttrs> {
   number: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  title: string;
+  text: string;
 
-  @ForeignKey(() => Book)
+  @ForeignKey(() => Chapter)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  bookId: number;
-
-  @HasMany(() => Page)
-  pages: Page[];
+  chapterId: number;
 }

@@ -18,6 +18,8 @@ import { CommentModule } from './comment/comment.module';
 import { Comment } from './comment/comment.model';
 import { ChapterModule } from './chapter/chapter.module';
 import { Chapter } from './chapter/chapter.model';
+import { PageModule } from './page/page.module';
+import { Page } from './page/page.model';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { Chapter } from './chapter/chapter.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Book, Genre, BookGenre, Rating, Comment, Chapter],
+      models: [User, Book, Genre, BookGenre, Rating, Comment, Chapter, Page],
       autoLoadModels: true,
       synchronize: true,
     }),
@@ -46,6 +48,7 @@ import { Chapter } from './chapter/chapter.model';
     RatingModule,
     CommentModule,
     ChapterModule,
+    PageModule,
   ],
 })
 export class AppModule {}
