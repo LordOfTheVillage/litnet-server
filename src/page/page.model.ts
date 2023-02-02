@@ -26,7 +26,7 @@ export class Page extends Model<Page, PageCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   number: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.TEXT, allowNull: false })
   text: string;
 
   @ForeignKey(() => Chapter)
