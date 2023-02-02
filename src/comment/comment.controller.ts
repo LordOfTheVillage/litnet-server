@@ -1,5 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 
@@ -12,14 +18,18 @@ export class CommentController {
     return this.commentService.createComment(dto);
   }
 
-  @Get("/book/:id")
+  @Get('/book/:id')
   getByBookId(@Param('id', ParseIntPipe) id: number) {
     return this.commentService.getCommentsByBookId(id);
   }
 
-  @Get("/user/:id")
+  @Get('/user/:id')
   getByUserId(@Param('id', ParseIntPipe) id: number) {
     return this.commentService.getCommentsByUserId(id);
   }
 
+  @Get()
+  getAll() {
+    return this.commentService.getAllComments();
+  }
 }

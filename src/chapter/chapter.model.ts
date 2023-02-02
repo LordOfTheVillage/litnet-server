@@ -6,16 +6,15 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Book } from 'src/books/books.model';
-import { User } from 'src/users/user.model';
 
-interface CommentCreationAttrs {
-  text: string;
-  userId: number;
+interface ChapterCreationAttrs {
+  title: string;
+  number: number;
   bookId: number;
 }
 
-@Table({ tableName: 'comments' })
-export class Comment extends Model<Comment, CommentCreationAttrs> {
+@Table({ tableName: 'chapters' })
+export class Chapter extends Model<Chapter, ChapterCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -24,12 +23,11 @@ export class Comment extends Model<Comment, CommentCreationAttrs> {
   })
   id: number;
 
-  @Column({ type: DataType.STRING, allowNull: true })
-  text: string;
-
-  @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  userId: number;
+  number: number;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  title: string;
 
   @ForeignKey(() => Book)
   @Column({ type: DataType.INTEGER, allowNull: false })

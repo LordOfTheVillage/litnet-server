@@ -10,12 +10,13 @@ import { GenreModule } from 'src/genre/genre.module';
 import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
 import { UsersModule } from 'src/users/users.module';
+import { Comment } from 'src/comment/comment.model';
 
 @Module({
   providers: [BooksService],
   controllers: [BooksController],
   imports: [
-    SequelizeModule.forFeature([Book, User, Genre, BookGenre, Rating]),
+    SequelizeModule.forFeature([Book, User, Genre, BookGenre, Rating, Comment]),
     GenreModule,
     FileModule,
     UsersModule,

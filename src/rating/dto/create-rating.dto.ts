@@ -6,9 +6,6 @@ export class CreateRatingDto {
   @Max(10, { message: 'Must be 10 or less' })
   readonly rating: number;
 
-  @IsInt({ message: 'Must be an integer number' })
   readonly bookId: number;
-
-  @IsInt({ message: 'Must be an integer number' })
   readonly userId: number;
 }

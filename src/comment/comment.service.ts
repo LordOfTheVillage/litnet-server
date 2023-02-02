@@ -14,6 +14,7 @@ export class CommentService {
     if (commentByUserId) {
       throw new HttpException('Such comment exists', HttpStatus.BAD_REQUEST);
     }
+    console.log(dto)
     const comment = await this.commentRepository.create(dto);
     return comment;
   }
@@ -37,5 +38,10 @@ export class CommentService {
       where: { userId, bookId },
     });
     return comment;
+  }
+
+  async getAllComments() {
+    const comments = await this.commentRepository.findAll();
+    return comments;
   }
 }
