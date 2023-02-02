@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreService } from './genre.service';
 
@@ -11,11 +19,6 @@ export class GenreController {
     return this.genreService.createGenre(dto);
   }
 
-  // @Get('/:id')
-  // getById(@Param('id', ParseIntPipe) id: number) {
-  //   return this.genreService.getGenreById(id);
-  // }
-
   @Get('/:name')
   getByName(@Param('name') name: string) {
     return this.genreService.getGenreByName(name);
@@ -24,5 +27,10 @@ export class GenreController {
   @Get()
   getAll() {
     return this.genreService.getAllGenres();
+  }
+
+  @Delete('/:id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.genreService.deleteGenre(id);
   }
 }

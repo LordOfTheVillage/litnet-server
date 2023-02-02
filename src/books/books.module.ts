@@ -11,6 +11,9 @@ import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
 import { UsersModule } from 'src/users/users.module';
 import { Comment } from 'src/comment/comment.model';
+import { ChapterModule } from 'src/chapter/chapter.module';
+import { CommentModule } from 'src/comment/comment.module';
+import { RatingModule } from 'src/rating/rating.module';
 
 @Module({
   providers: [BooksService],
@@ -20,6 +23,9 @@ import { Comment } from 'src/comment/comment.model';
     GenreModule,
     FileModule,
     UsersModule,
+    ChapterModule,
+    CommentModule,
+    RatingModule,
   ],
 })
 export class BooksModule {}

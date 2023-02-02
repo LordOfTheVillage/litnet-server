@@ -19,4 +19,14 @@ export class FileService {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async deleteFile(fileName: string) {
+    try {
+      const filePath = path.resolve(__dirname, '..', 'static', fileName);
+      if (!fs.existsSync(filePath)) return;
+      fs.unlinkSync(filePath);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

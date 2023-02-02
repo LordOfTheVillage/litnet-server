@@ -14,22 +14,43 @@ export class GenreService {
 
   async getGenreById(id: number) {
     const genre = await this.genreRepository.findByPk(id);
-    if (!genre) {
-      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
-    }
+    await this.validateGenre(genre);
     return genre;
   }
 
   async getGenreByName(name: string) {
     const genre = await this.genreRepository.findOne({ where: { name } });
-    if (!genre) {
-      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
-    }
+    await this.validateGenre(genre);
     return genre;
   }
 
+  async getGenresByBookId(id: number) {
+    const allGenres = await this.genreRepository.findAll({
+      include: { all: true },
+    });
+    const genres = allGenres.filter(({ books }) =>
+      books.some((book) => book.id === id),
+    );
+    return genres;
+  }
+
+  async deleteGenre(id: number) {
+    const genre = await this.genreRepository.findByPk(id);
+    this.validateGenre(genre);
+    await genre.destroy();
+    return genre;
+  }
+
+  private async validateGenre(genre: Genre) {
+    if (!genre) {
+      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
   async getAllGenres() {
-    const genres = await this.genreRepository.findAll();
+    const genres = await this.genreRepository.findAll({
+      include: { all: true },
+    });
     return genres;
   }
 }
