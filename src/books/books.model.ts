@@ -7,6 +7,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Comment } from 'src/comment/comment.model';
 import { BookGenre } from 'src/genre/book-genre.model';
 import { Genre } from 'src/genre/genre.model';
 import { Rating } from 'src/rating/rating.model';
@@ -45,4 +46,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @HasMany(() => Rating)
   ratings: Rating[];
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

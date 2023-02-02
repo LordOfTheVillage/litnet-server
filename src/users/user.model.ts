@@ -1,5 +1,6 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Book } from 'src/books/books.model';
+import { Comment } from 'src/comment/comment.model';
 import { Rating } from 'src/rating/rating.model';
 
 interface UserCreationAttrs {
@@ -36,4 +37,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Rating)
   ratings: Rating[];
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

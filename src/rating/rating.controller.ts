@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
 
@@ -18,11 +25,11 @@ export class RatingController {
 
   @Get('/book/:id')
   getByBookId(@Param('id', ParseIntPipe) id: number) {
-    return this.ratingService.getRatingByBookId(+id);
+    return this.ratingService.getRatingsByBookId(+id);
   }
 
   @Get('/user/:id')
   getByUserId(@Param('id', ParseIntPipe) id: number) {
-    return this.ratingService.getRatingByUserId(+id);
+    return this.ratingService.getRatingsByUserId(+id);
   }
 }

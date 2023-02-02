@@ -15,6 +15,7 @@ import { BookGenre } from './genre/book-genre.model';
 import { RatingModule } from './rating/rating.module';
 import { Rating } from './rating/rating.model';
 import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/comment.model';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { CommentModule } from './comment/comment.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Book, Genre, BookGenre, Rating],
+      models: [User, Book, Genre, BookGenre, Rating, Comment],
       autoLoadModels: true,
       synchronize: true,
     }),
