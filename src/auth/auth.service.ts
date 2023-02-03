@@ -20,6 +20,7 @@ export class AuthService {
 
   async login(dto: AuthUserDto) {
     const user = await this.validateUser(dto);
+    console.log(user);
     return this.generateToken(user);
   }
 
@@ -49,8 +50,8 @@ export class AuthService {
     }
   }
 
-  private async generateToken(user) {
-    const payload = { email: user.email, id: user.id };
+  private async generateToken({ id, email, name, img }) {
+    const payload = { id, email, name, img };
     return {
       token: this.jwtService.sign(payload),
     };

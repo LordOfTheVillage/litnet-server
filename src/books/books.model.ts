@@ -39,11 +39,19 @@ export class Book extends Model<Book, BookCreationAttrs> {
   @Column({ type: DataType.TEXT, allowNull: false })
   description: string;
 
+  @Column(DataType.VIRTUAL)
+  get rating() {
+    if (!this.ratings.length) return '0.00';
+    return (
+      this.ratings.reduce((acc, rating) => acc + rating.rating, 0) /
+      this.ratings.length
+    ).toFixed(2);
+  }
+
   @Column({ type: DataType.STRING })
   img: string;
 
   @ForeignKey(() => User)
-  // @BelongsTo(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
   userId: number;
 
@@ -58,7 +66,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @HasMany(() => Chapter)
   chapters: Chapter[];
-  
+
   @HasMany(() => Bookmark)
   bookmarks: Bookmark[];
 }
