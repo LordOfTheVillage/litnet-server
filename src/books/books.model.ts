@@ -41,7 +41,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @Column(DataType.VIRTUAL)
   get rating() {
-    if (!this.ratings.length) return '0.00';
+    if (!this?.ratings?.length) return '0.00';
     return (
       this.ratings.reduce((acc, rating) => acc + rating.rating, 0) /
       this.ratings.length
