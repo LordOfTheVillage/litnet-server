@@ -1,4 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
 import { Comment } from 'src/comment/comment.model';
 import { Rating } from 'src/rating/rating.model';
@@ -40,4 +41,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @HasMany(() => Bookmark)
+  bookmarks: Bookmark[];
 }

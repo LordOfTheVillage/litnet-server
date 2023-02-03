@@ -2,10 +2,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Chapter } from 'src/chapter/chapter.model';
+import { ReadingProgress } from 'src/reading-progress/reading-progress.model';
 
 interface PageCreationAttrs {
   text: string;
@@ -32,4 +34,7 @@ export class Page extends Model<Page, PageCreationAttrs> {
   @ForeignKey(() => Chapter)
   @Column({ type: DataType.INTEGER, allowNull: false })
   chapterId: number;
+
+  @HasOne(() => ReadingProgress)
+  readingProgress: ReadingProgress;
 }

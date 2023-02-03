@@ -43,6 +43,15 @@ export class BooksService {
     return books;
   }
 
+  async getBookById(id: number) {
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      include: { all: true },
+    });
+    this.validateBook(book);
+    return book;
+  }
+
   async updateBook({ genres, ...dto }: PatchBookDto, id: number, img?) {
     const book = await this.bookRepository.findOne({ where: { id } });
     this.validateBook(book);

@@ -11,6 +11,7 @@ export class CommentService {
   ) {}
 
   async createComment(dto: CreateCommentDto) {
+    // TODO user and book validation
     const commentByUserId = await this.getCommentByIds(dto.userId, dto.bookId);
     if (commentByUserId) {
       throw new HttpException('Such comment exists', HttpStatus.BAD_REQUEST);

@@ -13,6 +13,7 @@ export class ChapterService {
   ) {}
 
   async createChapter(dto: CreateChapterDto) {
+    // TODO book validation
     const chapters = await this.getChaptersByBookId(dto.bookId);
     const number = chapters.length + 1;
     const chapter = await this.chapterRepository.create({ ...dto, number });
@@ -31,6 +32,14 @@ export class ChapterService {
       include: { all: true },
     });
     return chapters;
+  }
+
+  async getChapterById(id: number) {
+    const chapter = await this.chapterRepository.findOne({
+      where: { id },
+      include: { all: true },
+    });
+    return chapter;
   }
 
   async deleteChapter(id: number) {

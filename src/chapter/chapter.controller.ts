@@ -17,6 +17,11 @@ export class ChapterController {
     return this.chapterService.getChaptersByBookId(id);
   }
 
+  @Get('/:id')
+  getById(@Param('id', ParseIntPipe) id: number) {
+    return this.chapterService.getChapterById(id);
+  }
+
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.chapterService.deleteChapter(id);

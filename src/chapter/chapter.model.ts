@@ -3,11 +3,13 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Book } from 'src/books/books.model';
 import { Page } from 'src/page/page.model';
+import { ReadingProgress } from 'src/reading-progress/reading-progress.model';
 
 interface ChapterCreationAttrs {
   title: string;
@@ -37,4 +39,7 @@ export class Chapter extends Model<Chapter, ChapterCreationAttrs> {
 
   @HasMany(() => Page)
   pages: Page[];
+
+  @HasOne(() => ReadingProgress)
+  readingProgress: ReadingProgress;
 }

@@ -9,6 +9,7 @@ export class RatingService {
   constructor(@InjectModel(Rating) private ratingRepository: typeof Rating) {}
 
   async createRating(dto: CreateRatingDto) {
+    // TODO user and book validation
     const ratingById = await this.getRatingByIds(dto.userId, dto.bookId);
     if (ratingById) {
       throw new HttpException('Such rating exists', HttpStatus.BAD_REQUEST);

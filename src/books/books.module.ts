@@ -14,12 +14,21 @@ import { Comment } from 'src/comment/comment.model';
 import { ChapterModule } from 'src/chapter/chapter.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { RatingModule } from 'src/rating/rating.module';
+import { Bookmark } from 'src/bookmark/bookmark.model';
 
 @Module({
   providers: [BooksService],
   controllers: [BooksController],
   imports: [
-    SequelizeModule.forFeature([Book, User, Genre, BookGenre, Rating, Comment]),
+    SequelizeModule.forFeature([
+      Book,
+      User,
+      Genre,
+      BookGenre,
+      Rating,
+      Comment,
+      Bookmark,
+    ]),
     GenreModule,
     FileModule,
     UsersModule,

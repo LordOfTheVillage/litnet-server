@@ -30,6 +30,11 @@ export class BooksController {
     return this.booksService.getAllBooks();
   }
 
+  @Get('/:id')
+  getById(@Param('id', ParseIntPipe) id: number) {
+    return this.booksService.getBookById(id);
+  }
+
   @Patch('/:id')
   @UseInterceptors(FileInterceptor('img'))
   update(

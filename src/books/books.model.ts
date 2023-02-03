@@ -7,6 +7,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { Comment } from 'src/comment/comment.model';
 import { BookGenre } from 'src/genre/book-genre.model';
@@ -57,4 +58,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @HasMany(() => Chapter)
   chapters: Chapter[];
+  
+  @HasMany(() => Bookmark)
+  bookmarks: Bookmark[];
 }
