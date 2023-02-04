@@ -15,6 +15,8 @@ import { ChapterModule } from 'src/chapter/chapter.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { RatingModule } from 'src/rating/rating.module';
 import { Bookmark } from 'src/bookmark/bookmark.model';
+import { Contest } from 'src/contest/models/contest.model';
+import { ContestBook } from 'src/contest/models/contest-book.model';
 
 @Module({
   providers: [BooksService],
@@ -28,6 +30,8 @@ import { Bookmark } from 'src/bookmark/bookmark.model';
       Rating,
       Comment,
       Bookmark,
+      Contest,
+      ContestBook,
     ]),
     GenreModule,
     FileModule,
@@ -36,5 +40,6 @@ import { Bookmark } from 'src/bookmark/bookmark.model';
     CommentModule,
     RatingModule,
   ],
+  exports: [BooksService],
 })
 export class BooksModule {}

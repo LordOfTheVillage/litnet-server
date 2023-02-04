@@ -1,7 +1,15 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
 import { Comment } from 'src/comment/comment.model';
+import { Contest } from 'src/contest/models/contest.model';
 import { Rating } from 'src/rating/rating.model';
 
 interface UserCreationAttrs {
@@ -32,6 +40,10 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @Column({ type: DataType.STRING })
   img: string;
+
+  @ForeignKey(() => Contest)
+  @Column({ type: DataType.INTEGER })
+  contestId: number;
 
   @HasMany(() => Book)
   books: Book[];

@@ -53,13 +53,17 @@ export class UsersController {
   }
 
   @Patch('/:id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() userDto: PatchUserDto) {
-    return this.usersService.updateUser(userDto, id);
+  @UseInterceptors(FileInterceptor('img'))
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userDto: PatchUserDto,
+    @UploadedFile() img?: Express.Multer.File,
+  ) {
+    return this.usersService.updateUser(userDto, id, img);
   }
 
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.deleteUser(id);
   }
-
 }

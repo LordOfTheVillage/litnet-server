@@ -1,5 +1,13 @@
-import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Book } from 'src/books/books.model';
+import { ContestGenre } from 'src/contest/models/contest-genre.model';
+import { Contest } from 'src/contest/models/contest.model';
 import { BookGenre } from './book-genre.model';
 
 interface GenreCreationAttrs {
@@ -21,4 +29,7 @@ export class Genre extends Model<Genre, GenreCreationAttrs> {
 
   @BelongsToMany(() => Book, () => BookGenre)
   books: Book[];
+
+  @BelongsToMany(() => Contest, () => ContestGenre)
+  contests: Contest[];
 }

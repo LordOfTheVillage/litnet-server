@@ -24,6 +24,10 @@ import { ReadingProgressModule } from './reading-progress/reading-progress.modul
 import { ReadingProgress } from './reading-progress/reading-progress.model';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { Bookmark } from './bookmark/bookmark.model';
+import { ContestModule } from './contest/contest.module';
+import { Contest } from './contest/models/contest.model';
+import { ContestBook } from './contest/models/contest-book.model';
+import { ContestGenre } from './contest/models/contest-genre.model';
 
 @Module({
   imports: [
@@ -51,6 +55,9 @@ import { Bookmark } from './bookmark/bookmark.model';
         Page,
         ReadingProgress,
         Bookmark,
+        Contest,
+        ContestBook,
+        ContestGenre
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -66,6 +73,7 @@ import { Bookmark } from './bookmark/bookmark.model';
     PageModule,
     ReadingProgressModule,
     BookmarkModule,
+    ContestModule,
   ],
 })
 export class AppModule {}

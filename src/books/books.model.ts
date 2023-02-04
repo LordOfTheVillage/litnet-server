@@ -10,6 +10,8 @@ import {
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { Comment } from 'src/comment/comment.model';
+import { ContestBook } from 'src/contest/models/contest-book.model';
+import { Contest } from 'src/contest/models/contest.model';
 import { BookGenre } from 'src/genre/book-genre.model';
 import { Genre } from 'src/genre/genre.model';
 import { Rating } from 'src/rating/rating.model';
@@ -57,6 +59,9 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @BelongsToMany(() => Genre, () => BookGenre)
   genres: Genre[];
+
+  @BelongsToMany(() => Contest, () => ContestBook)
+  contests: Contest[];
 
   @HasMany(() => Rating)
   ratings: Rating[];
