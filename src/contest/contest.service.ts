@@ -23,7 +23,7 @@ export class ContestService {
     });
     await this.checkExistingContest(suspect);
     const parsedDto = await this.parseDto(dto);
-    const fileName = await this.fileService.createFile(img);
+    const fileName = img ? await this.fileService.createFile(img) : null;
     const genreObjects = await this.getGenreObjects(genres);
     const contest = await this.contestRepository.create({
       ...parsedDto,

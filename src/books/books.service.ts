@@ -24,10 +24,10 @@ export class BooksService {
     private commentService: CommentService,
   ) {}
 
-  async createBook({ genres, ...dto }: CreateBookDto, img: any) {
+  async createBook({ genres, ...dto }: CreateBookDto, img?: any) {
     await this.validateUser(dto.userId);
 
-    const fileName = await this.fileService.createFile(img);
+    const fileName = img ? await this.fileService.createFile(img) : null;
 
     const genresArray = genres.split(' ');
     const genreObjects: Genre[] = await Promise.all(

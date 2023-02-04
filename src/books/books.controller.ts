@@ -21,7 +21,7 @@ export class BooksController {
 
   @Post()
   @UseInterceptors(FileInterceptor('img'))
-  create(@Body() dto: CreateBookDto, @UploadedFile() img: Express.Multer.File) {
+  create(@Body() dto: CreateBookDto, @UploadedFile() img?: Express.Multer.File) {
     return this.booksService.createBook(dto, img);
   }
 

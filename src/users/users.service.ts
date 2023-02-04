@@ -17,7 +17,7 @@ export class UsersService {
       where: { email: dto.email },
     });
     await this.checkExistingUser(suspectUser);
-    const fileName = await this.fileService.createFile(img);
+    const fileName = img ? await this.fileService.createFile(img) : null;
     const user = await this.userRepository.create({ ...dto, img: fileName });
     return user;
   }
