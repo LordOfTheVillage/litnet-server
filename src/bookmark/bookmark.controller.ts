@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { PatchBookmarkDto } from './dto/patch-bookmark.dto';
@@ -27,4 +37,26 @@ export class BookmarkController {
     return this.bookmarkService.updateBookmark(id, dto);
   }
 
+  @Get('/user/:id')
+  getByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.bookmarkService.getByUserId(id, limit, offset);
+  }
+
+  @Get('/book/:id')
+  getBybookId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.bookmarkService.getByBookId(id, limit, offset);
+  }
+
+  @Get()
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.bookmarkService.getAll(limit, offset);
+  }
 }

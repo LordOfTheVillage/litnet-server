@@ -43,6 +43,32 @@ export class BookmarkService {
     return bookmark;
   }
 
+  async getByUserId(id: number, limit?: number, offset?: number) {
+    const bookmarks = await this.bookmarkRepository.findAll({
+      where: { userId: id },
+      limit: limit ? +limit : undefined,
+      offset: offset ? +offset : undefined,
+    });
+    return bookmarks;
+  }
+
+  async getByBookId(id: number, limit?: number, offset?: number) {
+    const bookmarks = await this.bookmarkRepository.findAll({
+      where: { bookId: id },
+      limit: limit ? +limit : undefined,
+      offset: offset ? +offset : undefined,
+    });
+    return bookmarks;
+  }
+
+  async getAll(limit?: number, offset?: number) {
+    const bookmarks = await this.bookmarkRepository.findAll({
+      limit: limit ? +limit : undefined,
+      offset: offset ? +offset : undefined,
+    });
+    return bookmarks;
+  }
+
   async deleteBookmark(id: number) {
     const bookmark = await this.bookmarkRepository.findByPk(id);
     await this.validateBookmark(bookmark);
