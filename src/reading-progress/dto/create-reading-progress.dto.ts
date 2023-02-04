@@ -1,4 +1,4 @@
 export class CreateReadingProgressDto {
-  chapterId: number;
-  pageId: number;
+  readonly chapterId: number;
+  readonly pageId: number;
 }

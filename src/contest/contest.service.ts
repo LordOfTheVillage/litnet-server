@@ -18,10 +18,16 @@ export class ContestService {
   ) {}
 
   async createContest({ genres, ...dto }: CreateContestDto, img?: any) {
-    const suspect = await this.contestRepository.findOne({
+    const suspectByTitle = await this.contestRepository.findOne({
       where: { title: dto.title },
     });
-    await this.checkExistingContest(suspect);
+    await this.checkExistingContest(suspectByTitle);
+    
+    const suspectByUser = await this.contestRepository.findOne({
+      where: { userId: +dto.userId },
+    });
+    await this.checkExistingContest(suspectByUser);
+
     const parsedDto = await this.parseDto(dto);
     const fileName = img ? await this.fileService.createFile(img) : null;
     const genreObjects = await this.getGenreObjects(genres);

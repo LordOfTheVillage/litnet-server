@@ -2,23 +2,23 @@ import { IsOptional } from 'class-validator';
 
 export class PatchContestDto {
   @IsOptional()
-  title: string;
+  readonly title: string;
 
   @IsOptional()
-  description: string;
+  readonly description: string;
 
   @IsOptional()
-  prize: string | number;
+  readonly prize: string | number;
 
   @IsOptional()
-  userId: string | number;
+  readonly userId: string | number;
 
   @IsOptional()
-  date: string;
+  readonly date: string;
 
   @IsOptional()
-  countCharacters: string | number;
+  readonly countCharacters: string | number;
 
   @IsOptional()
-  genres: string;
+  readonly genres: string;
 }

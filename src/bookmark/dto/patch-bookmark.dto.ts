@@ -2,8 +2,8 @@ import { IsOptional } from 'class-validator';
 
 export class PatchBookmarkDto {
   @IsOptional()
-  chapterId: number;
+  readonly chapterId: number;
 
   @IsOptional()
-  pageId: number;
+  readonly pageId: number;
 }

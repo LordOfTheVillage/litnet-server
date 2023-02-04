@@ -2,8 +2,8 @@ import { IsOptional } from 'class-validator';
 
 export class PatchReadingProgressDto {
   @IsOptional()
-  chapterId: number;
+  readonly chapterId: number;
 
   @IsOptional()
-  pageId: number;
+  readonly pageId: number;
 }

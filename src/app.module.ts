@@ -28,6 +28,10 @@ import { ContestModule } from './contest/contest.module';
 import { Contest } from './contest/models/contest.model';
 import { ContestBook } from './contest/models/contest-book.model';
 import { ContestGenre } from './contest/models/contest-genre.model';
+import { BlogModule } from './blog/blog.module';
+import { BlogCommentModule } from './blog-comment/blog-comment.module';
+import { Blog } from './blog/blog.model';
+import { BlogComment } from './blog-comment/blog-comment.model';
 
 @Module({
   imports: [
@@ -57,7 +61,9 @@ import { ContestGenre } from './contest/models/contest-genre.model';
         Bookmark,
         Contest,
         ContestBook,
-        ContestGenre
+        ContestGenre,
+        Blog,
+        BlogComment,
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -74,6 +80,8 @@ import { ContestGenre } from './contest/models/contest-genre.model';
     ReadingProgressModule,
     BookmarkModule,
     ContestModule,
+    BlogModule,
+    BlogCommentModule,
   ],
 })
 export class AppModule {}

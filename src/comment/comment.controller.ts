@@ -12,7 +12,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PatchCommentDto } from './dto/patch-comment.dto';
 
-@Controller('comments')
+@Controller('book-comments')
 export class CommentController {
   constructor(private commentService: CommentService) {}
 

@@ -1,6 +1,6 @@
 export class CreateBookmarkDto {
-  bookId: number;
-  userId: number;
-  chapterId: number;
-  pageId: number;
+  readonly bookId: number;
+  readonly userId: number;
+  readonly chapterId: number;
+  readonly pageId: number;
 }

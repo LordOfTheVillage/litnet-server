@@ -2,11 +2,11 @@ import { IsOptional } from "class-validator";
 
 export class PatchUserDto {
   @IsOptional()
-  email: string;
+  readonly email: string;
 
   @IsOptional()
-  password: string;
+  readonly password: string;
 
   @IsOptional()
-  name: string;
+  readonly name: string;
 }

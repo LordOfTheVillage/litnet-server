@@ -5,17 +5,17 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Book } from 'src/books/books.model';
+import { Blog } from 'src/blog/blog.model';
 import { User } from 'src/users/user.model';
 
-interface CommentCreationAttrs {
+interface BlogCommentCreationAttrs {
   text: string;
   userId: number;
-  bookId: number;
+  blogId: number;
 }
 
-@Table({ tableName: 'comments' })
-export class Comment extends Model<Comment, CommentCreationAttrs> {
+@Table({ tableName: 'blog-comments' })
+export class BlogComment extends Model<BlogComment, BlogCommentCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -31,7 +31,7 @@ export class Comment extends Model<Comment, CommentCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   userId: number;
 
-  @ForeignKey(() => Book)
+  @ForeignKey(() => Blog)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  bookId: number;
+  blogId: number;
 }
