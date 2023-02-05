@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Book } from 'src/books/books.model';
 import { BooksModule } from 'src/books/books.module';
+import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { FileModule } from 'src/file/file.module';
 import { Genre } from 'src/genre/genre.model';
 import { GenreModule } from 'src/genre/genre.module';
@@ -23,6 +24,7 @@ import { Contest } from './models/contest.model';
       Contest,
       ContestGenre,
       ContestBook,
+      ContestComment,
     ]),
     FileModule,
     BooksModule,

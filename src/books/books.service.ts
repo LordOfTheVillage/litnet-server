@@ -38,8 +38,22 @@ export class BooksService {
     return book;
   }
 
-  async getAllBooks() {
-    const books = await this.bookRepository.findAll({ include: { all: true } });
+  async getAllBooks(limit?: number, offset?: number) {
+    const books = await this.bookRepository.findAll({
+      include: { model: Genre },
+      limit: limit ? limit : undefined,
+      offset: offset ? offset : undefined,
+    });
+    return books;
+  }
+
+  async getBooksByUserId(id: number, limit?: number, offset?: number) {
+    const books = await this.bookRepository.findAll({
+      where: { userId: id },
+      limit: limit ? limit : undefined,
+      offset: offset ? offset : undefined,
+      include: { model: Genre },
+    });
     return books;
   }
 

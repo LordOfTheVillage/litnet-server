@@ -8,5 +8,8 @@ export class PatchUserDto {
   readonly password: string;
 
   @IsOptional()
+  readonly readingView: string;
+
+  @IsOptional()
   readonly name: string;
 }

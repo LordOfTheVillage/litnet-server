@@ -11,6 +11,7 @@ import { Blog } from 'src/blog/blog.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
 import { Comment } from 'src/comment/comment.model';
+import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { Contest } from 'src/contest/models/contest.model';
 import { Rating } from 'src/rating/rating.model';
 
@@ -40,6 +41,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: false })
   password: string;
 
+  @Column({ type: DataType.STRING, defaultValue: 'pages' })
+  readingView: string;
+
   @Column({ type: DataType.STRING })
   img: string;
 
@@ -64,4 +68,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => BlogComment)
   blogComments: BlogComment[];
+
+  @HasMany(() => ContestComment)
+  contestComments: ContestComment[];
 }

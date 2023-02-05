@@ -9,6 +9,7 @@ import {
   Param,
   ParseIntPipe,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BooksService } from './books.service';
@@ -21,13 +22,25 @@ export class BooksController {
 
   @Post()
   @UseInterceptors(FileInterceptor('img'))
-  create(@Body() dto: CreateBookDto, @UploadedFile() img?: Express.Multer.File) {
+  create(
+    @Body() dto: CreateBookDto,
+    @UploadedFile() img?: Express.Multer.File,
+  ) {
     return this.booksService.createBook(dto, img);
   }
 
   @Get()
-  getAll() {
-    return this.booksService.getAllBooks();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.booksService.getAllBooks(limit, offset);
+  }
+
+  @Get('/user/:id')
+  getAllByUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.booksService.getBooksByUserId(id, limit, offset);
   }
 
   @Get('/:id')

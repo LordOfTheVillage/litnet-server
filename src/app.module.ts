@@ -32,6 +32,8 @@ import { BlogModule } from './blog/blog.module';
 import { BlogCommentModule } from './blog-comment/blog-comment.module';
 import { Blog } from './blog/blog.model';
 import { BlogComment } from './blog-comment/blog-comment.model';
+import { ContestCommentModule } from './contest-comment/contest-comment.module';
+import { ContestComment } from './contest-comment/contest-comment.model';
 
 @Module({
   imports: [
@@ -64,6 +66,7 @@ import { BlogComment } from './blog-comment/blog-comment.model';
         ContestGenre,
         Blog,
         BlogComment,
+        ContestComment
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -82,6 +85,7 @@ import { BlogComment } from './blog-comment/blog-comment.model';
     ContestModule,
     BlogModule,
     BlogCommentModule,
+    ContestCommentModule,
   ],
 })
 export class AppModule {}

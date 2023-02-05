@@ -6,6 +6,7 @@ import { BlogComment } from 'src/blog-comment/blog-comment.model';
 import { Blog } from 'src/blog/blog.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
+import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
 import { User } from './user.model';
@@ -16,7 +17,7 @@ import { UsersService } from './users.service';
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, Book, Rating, Bookmark, Blog, BlogComment]),
+    SequelizeModule.forFeature([User, Book, Rating, Bookmark, Blog, BlogComment, ContestComment]),
     forwardRef(() => AuthModule),
     FileModule,
   ],
