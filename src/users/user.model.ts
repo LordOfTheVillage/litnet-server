@@ -3,6 +3,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -50,6 +51,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @ForeignKey(() => Contest)
   @Column({ type: DataType.INTEGER })
   contestId: number;
+
+  @HasOne(() => Contest)
+  contest: Contest;
 
   @HasMany(() => Book)
   books: Book[];

@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -34,4 +35,10 @@ export class Comment extends Model<Comment, CommentCreationAttrs> {
   @ForeignKey(() => Book)
   @Column({ type: DataType.INTEGER, allowNull: false })
   bookId: number;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Book)
+  book: Book;
 }

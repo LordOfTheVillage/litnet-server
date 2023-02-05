@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { BlogComment } from 'src/blog-comment/blog-comment.model';
 import { Blog } from './blog.model';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
@@ -19,9 +20,10 @@ export class BlogService {
   }
 
   async getAllBlogs(limit?: number, offset?: number) {
-    const blogs = await this.blogRepository.findAll({
+    const blogs = await this.blogRepository.findAndCountAll({
       limit: limit ? +limit : undefined,
       offset: offset ? +offset : undefined,
+      include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;
   }
@@ -33,10 +35,11 @@ export class BlogService {
   }
 
   async getBlogsByUserId(id: number, limit?: number, offset?: number) {
-    const blogs = await this.blogRepository.findAll({
+    const blogs = await this.blogRepository.findAndCountAll({
       where: { userId: id },
       limit: limit ? +limit : undefined,
       offset: offset ? +offset : undefined,
+      include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;
   }
@@ -73,7 +76,10 @@ export class BlogService {
 
   private async checkExistingBlog(blog: Blog) {
     if (blog) {
-      throw new HttpException('Blog already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Blog with this title already exists',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

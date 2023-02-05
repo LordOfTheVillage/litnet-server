@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -36,4 +37,13 @@ export class Bookmark extends Model<Bookmark, BookmarkCreationAttrs> {
   @ForeignKey(() => ReadingProgress)
   @Column({ type: DataType.INTEGER, allowNull: false })
   progressId: number;
+
+  @BelongsTo(() => Book)
+  book: Book;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => ReadingProgress)
+  progress: ReadingProgress;
 }

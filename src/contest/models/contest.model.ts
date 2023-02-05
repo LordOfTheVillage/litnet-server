@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
@@ -64,4 +65,7 @@ export class Contest extends Model<Contest, ContestCreationAttrs> {
 
   @HasMany(() => ContestComment)
   contestComments: ContestComment[];
+
+  @BelongsTo(() => User)
+  user: User;
 }

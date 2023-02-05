@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -42,4 +43,7 @@ export class Chapter extends Model<Chapter, ChapterCreationAttrs> {
 
   @HasOne(() => ReadingProgress)
   readingProgress: ReadingProgress;
+
+  @BelongsTo(() => Book)
+  book: Book;
 }

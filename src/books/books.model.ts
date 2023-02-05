@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
@@ -74,4 +75,7 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @HasMany(() => Bookmark)
   bookmarks: Bookmark[];
+
+  @BelongsTo(() => User)
+  user: User;
 }

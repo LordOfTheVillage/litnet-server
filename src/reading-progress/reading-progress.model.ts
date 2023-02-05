@@ -2,9 +2,11 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { Page } from 'src/page/page.model';
 
