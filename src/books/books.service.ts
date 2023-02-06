@@ -1,11 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Bookmark } from 'src/bookmark/bookmark.model';
+import { Chapter } from 'src/chapter/chapter.model';
 import { ChapterService } from 'src/chapter/chapter.service';
+import { Comment } from 'src/comment/comment.model';
 import { CommentService } from 'src/comment/comment.service';
 import { FileService } from 'src/file/file.service';
 import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
+import { Rating } from 'src/rating/rating.model';
 import { RatingService } from 'src/rating/rating.service';
+import { User } from 'src/users/user.model';
 import { UsersService } from 'src/users/users.service';
 import { Book } from './books.model';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -13,6 +18,15 @@ import { PatchBookDto } from './dto/patch-book.dto';
 
 @Injectable()
 export class BooksService {
+  private static includeObject = [
+    { model: Genre, attributes: ['id'], through: { attributes: [] } },
+    { model: Chapter, attributes: ['id'] },
+    { model: Comment, attributes: ['id'] },
+    { model: Rating, attributes: ['rating'] },
+    { model: User, attributes: ['name'] },
+    { model: Bookmark, attributes: ['id']}
+  ];
+
   constructor(
     @InjectModel(Book)
     private bookRepository: typeof Book,
@@ -39,20 +53,20 @@ export class BooksService {
   }
 
   async getAllBooks(limit?: number, offset?: number) {
-    const books = await this.bookRepository.findAll({
-      include: { model: Genre },
+    const books = await this.bookRepository.findAndCountAll({
       limit: limit ? limit : undefined,
       offset: offset ? offset : undefined,
+      include: BooksService.includeObject,
     });
     return books;
   }
 
   async getBooksByUserId(id: number, limit?: number, offset?: number) {
-    const books = await this.bookRepository.findAll({
+    const books = await this.bookRepository.findAndCountAll({
       where: { userId: id },
       limit: limit ? limit : undefined,
       offset: offset ? offset : undefined,
-      include: { model: Genre },
+      include: BooksService.includeObject,
     });
     return books;
   }
@@ -85,7 +99,6 @@ export class BooksService {
   async deleteBook(id: number) {
     const book = await this.bookRepository.findOne({
       where: { id },
-      include: { all: true },
     });
     this.validateBook(book);
 

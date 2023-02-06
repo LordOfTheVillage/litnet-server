@@ -47,7 +47,7 @@ export class BookmarkController {
   }
 
   @Get('/book/:id')
-  getBybookId(
+  getByBookId(
     @Param('id', ParseIntPipe) id: number,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,

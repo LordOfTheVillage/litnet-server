@@ -18,9 +18,6 @@ import { PatchBlogCommentDto } from './dto/patch-blog-comment.dto';
 // пэйдж - чаптер, прогресс !!!!!!!!
 // прогресс - пэйдж, чаптер, букмарк !!!!!!!!
 
-
-
-
 @Injectable()
 export class BlogCommentService {
   constructor(
