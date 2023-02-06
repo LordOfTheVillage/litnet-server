@@ -43,6 +43,15 @@ export class BooksController {
     return this.booksService.getBooksByUserId(id, limit, offset);
   }
 
+  @Get('/genre')
+  getAllByGenre(
+    @Query('genre') genre: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.booksService.getBooksByGenreName(genre, limit, offset);
+  }
+
   @Get('/:id')
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.getBookById(id);

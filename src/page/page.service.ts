@@ -10,21 +10,30 @@ export class PageService {
 
   async createPage(dto: CreatePageDto) {
     // TODO chapter validation
-    const pages = await this.getPagesByChapterId(dto.chapterId);
+    const pages = await (await this.getPagesByChapterId(dto.chapterId)).rows;
     const number = pages.length + 1;
     const page = await this.pageRepository.create({ ...dto, number });
     return page;
   }
 
-  async getPagesByChapterId(chapterId: number) {
-    const pages = await this.pageRepository.findAll({
+  async getPagesByChapterId(
+    chapterId: number,
+    limit?: number,
+    offset?: number,
+  ) {
+    const pages = await this.pageRepository.findAndCountAll({
       where: { chapterId },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return pages;
   }
 
-  async getAllPages() {
-    const pages = await this.pageRepository.findAll();
+  async getAllPages(limit?: number, offset?: number) {
+    const pages = await this.pageRepository.findAndCountAll({
+      limit: limit || undefined,
+      offset: offset || undefined,
+    });
     return pages;
   }
 
@@ -59,7 +68,7 @@ export class PageService {
   }
 
   private async updatePagesNumbers(chapterId: number, number: number) {
-    const pages = await this.getPagesByChapterId(chapterId);
+    const pages = await (await this.getPagesByChapterId(chapterId)).rows;
     const pagesToUpdate = pages.filter((p) => p.number > number);
     pagesToUpdate.forEach(async (p) => {
       await p.update({ number: p.number - 1 });

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { User } from 'src/users/user.model';
 import { ContestComment } from './contest-comment.model';
 import { CreateContestCommentDto } from './dto/create-contest-comment.dto';
 import { PatchContestCommentDto } from './dto/patch-contest-comment.dto';
@@ -22,7 +23,9 @@ export class ContestCommentService {
   }
 
   async getCommentById(id: number) {
-    const comment = await this.contestCommentRepository.findByPk(id);
+    const comment = await this.contestCommentRepository.findByPk(id, {
+      include: { model: User, attributes: ['id', 'name', 'img'] },
+    });
     await this.validateComment(comment);
     return comment;
   }
@@ -30,8 +33,9 @@ export class ContestCommentService {
   async getCommentsByContestId(id: number, limit: number, offset: number) {
     const comments = await this.contestCommentRepository.findAll({
       where: { contestId: id },
-      limit: limit ? limit : undefined,
-      offset: offset ? offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
@@ -39,16 +43,18 @@ export class ContestCommentService {
   async getCommentsByUserId(id: number, limit: number, offset: number) {
     const comments = await this.contestCommentRepository.findAll({
       where: { userId: id },
-      limit: limit ? limit : undefined,
-      offset: offset ? offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
 
   async getAllComments(limit: number, offset: number) {
     const comments = await this.contestCommentRepository.findAll({
-      limit: limit ? limit : undefined,
-      offset: offset ? offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }

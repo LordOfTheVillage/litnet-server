@@ -21,8 +21,8 @@ export class BlogService {
 
   async getAllBlogs(limit?: number, offset?: number) {
     const blogs = await this.blogRepository.findAndCountAll({
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;
@@ -37,8 +37,8 @@ export class BlogService {
   async getBlogsByUserId(id: number, limit?: number, offset?: number) {
     const blogs = await this.blogRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;

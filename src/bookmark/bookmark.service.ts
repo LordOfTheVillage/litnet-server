@@ -46,8 +46,8 @@ export class BookmarkService {
   async getByUserId(id: number, limit?: number, offset?: number) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return bookmarks;
   }
@@ -55,16 +55,16 @@ export class BookmarkService {
   async getByBookId(id: number, limit?: number, offset?: number) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { bookId: id },
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return bookmarks;
   }
 
   async getAll(limit?: number, offset?: number) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return bookmarks;
   }

@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreatePageDto } from './dto/create-page.dto';
 import { PatchPageDto } from './dto/patch-page.dto';
 import { PageService } from './page.service';
@@ -13,13 +23,17 @@ export class PageController {
   }
 
   @Get('/book/:id')
-  getByBookId(@Param('id', ParseIntPipe) id: number) {
-    return this.pageService.getPagesByChapterId(id);
+  getByBookId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.pageService.getPagesByChapterId(id, limit, offset);
   }
 
   @Get()
-  getAll() {
-    return this.pageService.getAllPages();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.pageService.getAllPages(limit, offset);
   }
 
   @Get('/:id')
@@ -36,5 +50,4 @@ export class PageController {
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: PatchPageDto) {
     return this.pageService.updatePage(id, dto);
   }
-
 }

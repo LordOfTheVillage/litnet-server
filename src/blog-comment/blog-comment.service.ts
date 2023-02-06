@@ -36,8 +36,8 @@ export class BlogCommentService {
 
   async getAllBlogComments(limit?: number, offset?: number) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: { model: User, attributes: ['img', 'name'] },
     });
     return blogComments;
@@ -52,8 +52,8 @@ export class BlogCommentService {
   async getBlogCommentsByBlogId(id: number, limit?: number, offset?: number) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
       where: { blogId: id },
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: { model: User, attributes: ['img', 'name'] },
     });
     return blogComments;
@@ -62,8 +62,8 @@ export class BlogCommentService {
   async getBlogCommentsByUserId(id: number, limit?: number, offset?: number) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit ? +limit : undefined,
-      offset: offset ? +offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return blogComments;
   }

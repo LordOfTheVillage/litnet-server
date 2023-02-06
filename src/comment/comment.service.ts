@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { User } from 'src/users/user.model';
 import { Comment } from './comment.model';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PatchCommentDto } from './dto/patch-comment.dto';
@@ -20,16 +21,22 @@ export class CommentService {
     return comment;
   }
 
-  async getCommentsByBookId(id: number) {
-    const comments = await this.commentRepository.findAll({
+  async getCommentsByBookId(id: number, limit?: number, offset?: number) {
+    const comments = await this.commentRepository.findAndCountAll({
       where: { bookId: id },
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
 
-  async getCommentsByUserId(id: number) {
-    const comments = await this.commentRepository.findAll({
+  async getCommentsByUserId(id: number, limit?: number, offset?: number) {
+    const comments = await this.commentRepository.findAndCountAll({
       where: { userId: id },
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
@@ -42,13 +49,19 @@ export class CommentService {
   }
 
   async getCommentById(id: number) {
-    const comment = await this.commentRepository.findByPk(id);
+    const comment = await this.commentRepository.findByPk(id, {
+      include: { model: User, attributes: ['id', 'name', 'img'] },
+    });
     this.validateComment(comment);
     return comment;
   }
 
-  async getAllComments() {
-    const comments = await this.commentRepository.findAll();
+  async getAllComments(limit?: number, offset?: number) {
+    const comments = await this.commentRepository.findAndCountAll({
+      limit: limit || undefined,
+      offset: offset || undefined,
+      include: { model: User, attributes: ['id', 'name', 'img'] },
+    });
     return comments;
   }
 

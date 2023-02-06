@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreService } from './genre.service';
@@ -25,8 +26,8 @@ export class GenreController {
   }
 
   @Get()
-  getAll() {
-    return this.genreService.getAllGenres();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.genreService.getAllGenres(limit, offset);
   }
 
   @Delete('/:id')

@@ -4,6 +4,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FileService } from 'src/file/file.service';
 import { PatchUserDto } from './dto/patch-user.dto';
+import { Contest } from 'src/contest/models/contest.model';
+import { Comment } from 'src/comment/comment.model';
+import { Book } from 'src/books/books.model';
+import { Bookmark } from 'src/bookmark/bookmark.model';
 
 @Injectable()
 export class UsersService {
@@ -22,13 +26,23 @@ export class UsersService {
     return user;
   }
 
-  async getAllUsers() {
-    const users = await this.userRepository.findAll({ include: { all: true } });
+  async getAllUsers(limit?: number, offset?: number) {
+    const users = await this.userRepository.findAll({
+      limit: limit || undefined,
+      offset: offset || undefined,
+    });
     return users;
   }
 
   async getUserById(id: number) {
-    const user = await this.userRepository.findByPk(id);
+    const user = await this.userRepository.findByPk(id, {
+      include: [
+        { model: Comment, attributes: ['id'] },
+        { model: Contest, attributes: ['id'] },
+        { model: Book, attributes: ['id'] },
+        { model: Bookmark, attributes: ['id'] },
+      ],
+    });
     return user;
   }
 

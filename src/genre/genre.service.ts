@@ -19,16 +19,21 @@ export class GenreService {
   }
 
   async getGenreByName(name: string) {
-    const genre = await this.genreRepository.findOne({ where: { name } });
+    const genre = await this.genreRepository.findOne({
+      where: { name },
+      include: { all: true },
+    });
     await this.validateGenre(genre);
     return genre;
   }
 
-  async getGenresByBookId(id: number) {
-    const allGenres = await this.genreRepository.findAll({
+  async getGenresByBookId(id: number, limit?: number, offset?: number) {
+    const { rows } = await this.genreRepository.findAndCountAll({
       include: { all: true },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
-    const genres = allGenres.filter(({ books }) =>
+    const genres = rows.filter(({ books }) =>
       books.some((book) => book.id === id),
     );
     return genres;
@@ -47,9 +52,10 @@ export class GenreService {
     }
   }
 
-  async getAllGenres() {
-    const genres = await this.genreRepository.findAll({
-      include: { all: true },
+  async getAllGenres(limit?: number, offset?: number) {
+    const genres = await this.genreRepository.findAndCountAll({
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return genres;
   }

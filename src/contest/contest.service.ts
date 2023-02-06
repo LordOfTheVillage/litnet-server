@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Book } from 'src/books/books.model';
 import { BooksService } from 'src/books/books.service';
 import { FileService } from 'src/file/file.service';
 import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
+import { User } from 'src/users/user.model';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
 import { Contest } from './models/contest.model';
@@ -22,7 +24,7 @@ export class ContestService {
       where: { title: dto.title },
     });
     await this.checkExistingContest(suspectByTitle);
-    
+
     const suspectByUser = await this.contestRepository.findOne({
       where: { userId: +dto.userId },
     });
@@ -39,9 +41,21 @@ export class ContestService {
     return contest;
   }
 
-  async getAllContests() {
-    const contests = await this.contestRepository.findAll({
-      include: { all: true },
+  async getAllContests(limit?: number, offset?: number) {
+    const contests = await this.contestRepository.findAndCountAll({
+      include: { model: Book, attributes: ['id'] },
+      limit: limit || undefined,
+      offset: offset || undefined,
+    });
+    return contests;
+  }
+
+  async getContestsByUserId(id: number, limit?: number, offset?: number) {
+    const contests = await this.contestRepository.findAndCountAll({
+      where: { userId: id },
+      include: { model: Book, attributes: ['id'] },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return contests;
   }
@@ -49,7 +63,10 @@ export class ContestService {
   async getContestById(id: number) {
     const contest = await this.contestRepository.findOne({
       where: { id },
-      include: { all: true },
+      include: [
+        { model: Book, attributes: ['id'] },
+        { model: User, attributes: ['id', 'name'] },
+      ],
     });
     this.validateContest(contest);
     return contest;

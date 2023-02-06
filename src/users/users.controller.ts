@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,8 +30,8 @@ export class UsersController {
   }
 
   @Get()
-  getAll() {
-    return this.usersService.getAllUsers();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.usersService.getAllUsers(limit, offset);
   }
 
   @Get('/:id')

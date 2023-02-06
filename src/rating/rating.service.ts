@@ -18,21 +18,28 @@ export class RatingService {
     return rating;
   }
 
-  async getAllRatings() {
-    const ratings = await this.ratingRepository.findAll();
+  async getAllRatings(limit?: number, offset?: number) {
+    const ratings = await this.ratingRepository.findAndCountAll({
+      limit: limit || undefined,
+      offset: offset || undefined,
+    });
     return ratings;
   }
 
-  async getRatingsByBookId(id: number) {
-    const rating = await this.ratingRepository.findAll({
+  async getRatingsByBookId(id: number, limit?: number, offset?: number) {
+    const rating = await this.ratingRepository.findAndCountAll({
       where: { bookId: id },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return rating;
   }
 
-  async getRatingsByUserId(id: number) {
-    const rating = await this.ratingRepository.findAll({
+  async getRatingsByUserId(id: number, limit?: number, offset?: number) {
+    const rating = await this.ratingRepository.findAndCountAll({
       where: { userId: id },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return rating;
   }

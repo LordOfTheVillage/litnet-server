@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -22,18 +23,26 @@ export class CommentController {
   }
 
   @Get('/book/:id')
-  getByBookId(@Param('id', ParseIntPipe) id: number) {
-    return this.commentService.getCommentsByBookId(id);
+  getByBookId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.commentService.getCommentsByBookId(id, limit, offset);
   }
 
   @Get('/user/:id')
-  getByUserId(@Param('id', ParseIntPipe) id: number) {
-    return this.commentService.getCommentsByUserId(id);
+  getByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.commentService.getCommentsByUserId(id, limit, offset);
   }
 
   @Get()
-  getAll() {
-    return this.commentService.getAllComments();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.commentService.getAllComments(limit, offset);
   }
 
   @Get('/:id')

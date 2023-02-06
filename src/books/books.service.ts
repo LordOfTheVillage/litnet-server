@@ -19,12 +19,12 @@ import { PatchBookDto } from './dto/patch-book.dto';
 @Injectable()
 export class BooksService {
   private static includeObject = [
-    { model: Genre, attributes: ['id'], through: { attributes: [] } },
+    { model: Genre, attributes: ['id', 'name'], through: { attributes: [] } },
     { model: Chapter, attributes: ['id'] },
     { model: Comment, attributes: ['id'] },
     { model: Rating, attributes: ['rating'] },
     { model: User, attributes: ['name'] },
-    { model: Bookmark, attributes: ['id']}
+    { model: Bookmark, attributes: ['id'] },
   ];
 
   constructor(
@@ -54,9 +54,23 @@ export class BooksService {
 
   async getAllBooks(limit?: number, offset?: number) {
     const books = await this.bookRepository.findAndCountAll({
-      limit: limit ? limit : undefined,
-      offset: offset ? offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: BooksService.includeObject,
+    });
+    return books;
+  }
+
+  async getBooksByGenreName(name: string, limit?: number, offset?: number) {
+    const books = await this.bookRepository.findAndCountAll({
+      include: {
+        model: Genre,
+        where: { name },
+        attributes: [],
+        through: { attributes: [] },
+      },
+      limit: limit || undefined,
+      offset: offset || undefined,
     });
     return books;
   }
@@ -64,8 +78,8 @@ export class BooksService {
   async getBooksByUserId(id: number, limit?: number, offset?: number) {
     const books = await this.bookRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit ? limit : undefined,
-      offset: offset ? offset : undefined,
+      limit: limit || undefined,
+      offset: offset || undefined,
       include: BooksService.includeObject,
     });
     return books;

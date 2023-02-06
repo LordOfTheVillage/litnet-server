@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -49,9 +50,18 @@ export class ContestController {
     return this.contestService.getContestById(id);
   }
 
+  @Get('/user/:id')
+  getAllByUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.contestService.getContestsByUserId(id, limit, offset);
+  }
+
   @Get()
-  getAll() {
-    return this.contestService.getAllContests();
+  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+    return this.contestService.getAllContests(limit, offset);
   }
 
   @Patch('/:id')
@@ -68,5 +78,4 @@ export class ContestController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.contestService.deleteContest(id);
   }
-  // Метод на добавление книги в конкурс
 }
