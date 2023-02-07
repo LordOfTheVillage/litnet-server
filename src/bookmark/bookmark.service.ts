@@ -1,12 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ReadingProgressService } from 'src/reading-progress/reading-progress.service';
+import { PaginationQueryParams } from 'src/types/types';
 import { Bookmark } from './bookmark.model';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { PatchBookmarkDto } from './dto/patch-bookmark.dto';
 
 @Injectable()
 export class BookmarkService {
+  private static readonly DEFAULT_LIMIT = 10;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(
     @InjectModel(Bookmark)
     private bookmarkRepository: typeof Bookmark,
@@ -43,28 +47,46 @@ export class BookmarkService {
     return bookmark;
   }
 
-  async getByUserId(id: number, limit?: number, offset?: number) {
+  async getByUserId(
+    id: number,
+    {
+      limit = BookmarkService.DEFAULT_LIMIT,
+      offset = BookmarkService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return bookmarks;
   }
 
-  async getByBookId(id: number, limit?: number, offset?: number) {
+  async getByBookId(
+    id: number,
+    {
+      limit = BookmarkService.DEFAULT_LIMIT,
+      offset = BookmarkService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { bookId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return bookmarks;
   }
 
-  async getAll(limit?: number, offset?: number) {
+  async getAll({
+    limit = BookmarkService.DEFAULT_LIMIT,
+    offset = BookmarkService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return bookmarks;
   }

@@ -12,6 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GenreQueryParams, BookQueryParams } from 'src/types/types';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PatchBookDto } from './dto/patch-book.dto';
@@ -30,41 +31,21 @@ export class BooksController {
   }
 
   @Get()
-  getAll(
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
-    @Query('sort') sort?: string,
-    @Query('order') order?: string,
-  ) {
-    return this.booksService.getAllBooks(limit, offset, sort, order);
+  getAll(@Query() query: BookQueryParams) {
+    return this.booksService.getAllBooks(query);
   }
 
   @Get('/user/:id')
   getAllByUser(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
-    @Query('sort') sort?: string,
-    @Query('order') order?: string,
+    @Query() query: BookQueryParams,
   ) {
-    return this.booksService.getBooksByUserId(id, limit, offset, sort, order);
+    return this.booksService.getBooksByUserId(id, query);
   }
 
   @Get('/genre')
-  getAllByGenre(
-    @Query('genre') genre: string,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
-    @Query('sort') sort?: string,
-    @Query('order') order?: string,
-  ) {
-    return this.booksService.getBooksByGenreName(
-      genre,
-      limit,
-      offset,
-      sort,
-      order,
-    );
+  getAllByGenre(@Query() query: GenreQueryParams) {
+    return this.booksService.getBooksByGenreName(query);
   }
 
   @Get('/:id')

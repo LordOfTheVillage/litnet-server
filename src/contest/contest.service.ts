@@ -5,6 +5,7 @@ import { BooksService } from 'src/books/books.service';
 import { FileService } from 'src/file/file.service';
 import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
+import { PaginationQueryParams } from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
@@ -12,6 +13,8 @@ import { Contest } from './models/contest.model';
 
 @Injectable()
 export class ContestService {
+  private static readonly DEFAULT_LIMIT = 10;
+  private static readonly DEFAULT_OFFSET = 0;
   constructor(
     @InjectModel(Contest) private contestRepository: typeof Contest,
     private fileService: FileService,
@@ -41,19 +44,30 @@ export class ContestService {
     return contest;
   }
 
-  async getAllContests(limit?: number, offset?: number) {
+  async getAllContests({
+    limit = ContestService.DEFAULT_LIMIT,
+    offset = ContestService.DEFAULT_LIMIT,
+  }: PaginationQueryParams) {
     const contests = await this.contestRepository.findAndCountAll({
       include: { model: Book, attributes: ['id'] },
+      distinct: true,
       limit: limit || undefined,
       offset: offset || undefined,
     });
     return contests;
   }
 
-  async getContestsByUserId(id: number, limit?: number, offset?: number) {
+  async getContestsByUserId(
+    id: number,
+    {
+      limit = ContestService.DEFAULT_LIMIT,
+      offset = ContestService.DEFAULT_LIMIT,
+    }: PaginationQueryParams,
+  ) {
     const contests = await this.contestRepository.findAndCountAll({
       where: { userId: id },
       include: { model: Book, attributes: ['id'] },
+      distinct: true,
       limit: limit || undefined,
       offset: offset || undefined,
     });

@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
@@ -28,17 +29,16 @@ export class BlogController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.blogService.getAllBlogs(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.blogService.getAllBlogs(query);
   }
 
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.blogService.getBlogsByUserId(id, limit, offset);
+    return this.blogService.getBlogsByUserId(id, query);
   }
 
   @Patch('/:id')

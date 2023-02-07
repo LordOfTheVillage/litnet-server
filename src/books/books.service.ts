@@ -10,6 +10,7 @@ import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
 import { Rating } from 'src/rating/rating.model';
 import { RatingService } from 'src/rating/rating.service';
+import { GenreQueryParams, BookQueryParams } from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { UsersService } from 'src/users/users.service';
 import { Book } from './books.model';
@@ -18,6 +19,8 @@ import { PatchBookDto } from './dto/patch-book.dto';
 
 @Injectable()
 export class BooksService {
+  private static readonly DEFAULT_LIMIT = 10;
+  private static readonly DEFAULT_OFFSET = 0;
   private static includeObject = [
     { model: Genre, attributes: ['id', 'name'], through: { attributes: [] } },
     { model: Chapter, attributes: ['id'] },
@@ -52,45 +55,55 @@ export class BooksService {
     return book;
   }
 
-  async getAllBooks(
-    limit?: number,
-    offset?: number,
-    sort?: string,
-    order?: string,
-  ) {
+  async getAllBooks({
+    limit = BooksService.DEFAULT_LIMIT,
+    offset = BooksService.DEFAULT_OFFSET,
+    sort,
+    order,
+  }: BookQueryParams) {
     const books = await this.bookRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: BooksService.includeObject,
     });
-
     return this.switchSorting(books, sort, order);
   }
 
-  async getBooksByGenreName(
-    name: string,
-    limit?: number,
-    offset?: number,
-    sort?: string,
-    order?: string,
-  ) {
+  async getBooksByGenreName({
+    genre,
+    limit = BooksService.DEFAULT_LIMIT,
+    offset = BooksService.DEFAULT_OFFSET,
+    sort,
+    order,
+  }: GenreQueryParams) {
     const books = await this.bookRepository.findAndCountAll({
       include: [
         ...BooksService.includeObject,
-        { model: Genre, where: { name } },
+        { model: Genre, where: { name: genre } },
       ],
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
 
     return this.switchSorting(books, sort, order);
   }
 
-  async getBooksByUserId(id: number, limit?: number, offset?: number, sort?: string, order?: string) {
+  async getBooksByUserId(
+    id: number,
+    {
+      limit = BooksService.DEFAULT_LIMIT,
+      offset = BooksService.DEFAULT_OFFSET,
+      sort,
+      order,
+    }: BookQueryParams,
+  ) {
     const books = await this.bookRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: BooksService.includeObject,
     });
 
@@ -125,21 +138,22 @@ export class BooksService {
   async deleteBook(id: number) {
     const book = await this.bookRepository.findOne({
       where: { id },
+      include: { all: true },
     });
     this.validateBook(book);
 
     const comments = book.comments || [];
-    await comments.forEach(
+    comments.forEach(
       async (comment) => await this.commentService.deleteComment(comment.id),
     );
 
     const chapters = book.chapters || [];
-    await chapters.forEach(
+    chapters.forEach(
       async (chapter) => await this.chapterService.deleteChapter(chapter.id),
     );
 
     const ratings = book.ratings || [];
-    await ratings.forEach(
+    ratings.forEach(
       async (rating) => await this.ratingService.deleteRating(rating.id),
     );
 

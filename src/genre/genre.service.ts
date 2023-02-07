@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './genre.model';
 
 @Injectable()
 export class GenreService {
+  private static readonly DEFAULT_LIMIT = 7;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(@InjectModel(Genre) private genreRepository: typeof Genre) {}
 
   async createGenre(dto: CreateGenreDto) {
@@ -27,11 +31,18 @@ export class GenreService {
     return genre;
   }
 
-  async getGenresByBookId(id: number, limit?: number, offset?: number) {
+  async getGenresByBookId(
+    id: number,
+    {
+      limit = GenreService.DEFAULT_LIMIT,
+      offset = GenreService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const { rows } = await this.genreRepository.findAndCountAll({
+      distinct: true,
       include: { all: true },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      limit,
+      offset,
     });
     const genres = rows.filter(({ books }) =>
       books.some((book) => book.id === id),
@@ -52,10 +63,14 @@ export class GenreService {
     }
   }
 
-  async getAllGenres(limit?: number, offset?: number) {
+  async getAllGenres({
+    limit = GenreService.DEFAULT_LIMIT,
+    offset = GenreService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const genres = await this.genreRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return genres;
   }

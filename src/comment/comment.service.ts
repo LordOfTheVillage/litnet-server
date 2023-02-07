@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginationQueryParams } from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { Comment } from './comment.model';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -7,6 +8,8 @@ import { PatchCommentDto } from './dto/patch-comment.dto';
 
 @Injectable()
 export class CommentService {
+  private static readonly DEFAULT_LIMIT = 7;
+  private static readonly DEFAULT_OFFSET = 0;
   constructor(
     @InjectModel(Comment) private commentRepository: typeof Comment,
   ) {}
@@ -21,21 +24,35 @@ export class CommentService {
     return comment;
   }
 
-  async getCommentsByBookId(id: number, limit?: number, offset?: number) {
+  async getCommentsByBookId(
+    id: number,
+    {
+      limit = CommentService.DEFAULT_LIMIT,
+      offset = CommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const comments = await this.commentRepository.findAndCountAll({
       where: { bookId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
 
-  async getCommentsByUserId(id: number, limit?: number, offset?: number) {
+  async getCommentsByUserId(
+    id: number,
+    {
+      limit = CommentService.DEFAULT_LIMIT,
+      offset = CommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const comments = await this.commentRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
@@ -56,10 +73,14 @@ export class CommentService {
     return comment;
   }
 
-  async getAllComments(limit?: number, offset?: number) {
+  async getAllComments({
+    limit = CommentService.DEFAULT_LIMIT,
+    offset = CommentService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const comments = await this.commentRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;

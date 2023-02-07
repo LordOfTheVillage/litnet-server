@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreatePageDto } from './dto/create-page.dto';
 import { PatchPageDto } from './dto/patch-page.dto';
 import { PageService } from './page.service';
@@ -25,15 +26,14 @@ export class PageController {
   @Get('/book/:id')
   getByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.pageService.getPagesByChapterId(id, limit, offset);
+    return this.pageService.getPagesByChapterId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.pageService.getAllPages(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.pageService.getAllPages(query);
   }
 
   @Get('/:id')

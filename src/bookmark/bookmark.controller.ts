@@ -9,6 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { query } from 'express';
+import { PaginationQueryParams } from 'src/types/types';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { PatchBookmarkDto } from './dto/patch-bookmark.dto';
@@ -40,23 +42,21 @@ export class BookmarkController {
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams
   ) {
-    return this.bookmarkService.getByUserId(id, limit, offset);
+    return this.bookmarkService.getByUserId(id, query);
   }
 
   @Get('/book/:id')
   getByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams
   ) {
-    return this.bookmarkService.getByBookId(id, limit, offset);
+    return this.bookmarkService.getByBookId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.bookmarkService.getAll(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.bookmarkService.getAll(query);
   }
 }

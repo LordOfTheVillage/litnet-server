@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginationQueryParams } from 'src/types/types';
 import { ContestService } from './contest.service';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
@@ -53,15 +54,14 @@ export class ContestController {
   @Get('/user/:id')
   getAllByUser(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.contestService.getContestsByUserId(id, limit, offset);
+    return this.contestService.getContestsByUserId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.contestService.getAllContests(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.contestService.getAllContests(query);
   }
 
   @Patch('/:id')

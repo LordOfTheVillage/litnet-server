@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { ContestCommentService } from './contest-comment.service';
 import { CreateContestCommentDto } from './dto/create-contest-comment.dto';
 import { PatchContestCommentDto } from './dto/patch-contest-comment.dto';
@@ -25,24 +26,22 @@ export class ContestCommentController {
   @Get('/contest/:id')
   getByContestId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.contestCommentService.getCommentsByContestId(id, limit, offset);
+    return this.contestCommentService.getCommentsByContestId(id, query);
   }
 
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.contestCommentService.getCommentsByUserId(id, limit, offset);
+    return this.contestCommentService.getCommentsByUserId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.contestCommentService.getAllComments(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.contestCommentService.getAllComments(query);
   }
 
   @Get('/:id')

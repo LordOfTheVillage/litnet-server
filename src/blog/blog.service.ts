@@ -1,12 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { BlogComment } from 'src/blog-comment/blog-comment.model';
+import { PaginationQueryParams } from 'src/types/types';
 import { Blog } from './blog.model';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
 
 @Injectable()
 export class BlogService {
+  private static readonly DEFAULT_LIMIT = 7;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(@InjectModel(Blog) private blogRepository: typeof Blog) {}
 
   async createBlog(dto: CreateBlogDto) {
@@ -19,10 +23,14 @@ export class BlogService {
     return blog;
   }
 
-  async getAllBlogs(limit?: number, offset?: number) {
+  async getAllBlogs({
+    limit = BlogService.DEFAULT_LIMIT,
+    offset = BlogService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const blogs = await this.blogRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;
@@ -34,11 +42,18 @@ export class BlogService {
     return blog;
   }
 
-  async getBlogsByUserId(id: number, limit?: number, offset?: number) {
+  async getBlogsByUserId(
+    id: number,
+    {
+      limit = BlogService.DEFAULT_LIMIT,
+      offset = BlogService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const blogs = await this.blogRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;

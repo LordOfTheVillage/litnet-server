@@ -9,6 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { query } from 'express';
+import { PaginationQueryParams } from 'src/types/types';
 import { ChapterService } from './chapter.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { PatchChapterDto } from './dto/patch-chapter.dto';
@@ -25,15 +27,14 @@ export class ChapterController {
   @Get('/book/:id')
   getByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.chapterService.getChaptersByBookId(id, limit, offset);
+    return this.chapterService.getChaptersByBookId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.chapterService.getAllChapters(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.chapterService.getAllChapters(query);
   }
 
   @Get('/:id')

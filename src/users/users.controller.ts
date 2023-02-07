@@ -12,6 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './users.service';
@@ -30,8 +31,8 @@ export class UsersController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.usersService.getAllUsers(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.usersService.getAllUsers(query);
   }
 
   @Get('/:id')

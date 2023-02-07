@@ -8,9 +8,13 @@ import { Contest } from 'src/contest/models/contest.model';
 import { Comment } from 'src/comment/comment.model';
 import { Book } from 'src/books/books.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
+import { PaginationQueryParams } from 'src/types/types';
 
 @Injectable()
 export class UsersService {
+  private static readonly DEFAULT_LIMIT = 10;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(
     @InjectModel(User) private userRepository: typeof User,
     private fileService: FileService,
@@ -26,10 +30,14 @@ export class UsersService {
     return user;
   }
 
-  async getAllUsers(limit?: number, offset?: number) {
-    const users = await this.userRepository.findAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+  async getAllUsers({
+    limit = UsersService.DEFAULT_LIMIT,
+    offset = UsersService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
+    const users = await this.userRepository.findAndCountAll({
+      distinct: true,
+      limit,
+      offset,
     });
     return users;
   }

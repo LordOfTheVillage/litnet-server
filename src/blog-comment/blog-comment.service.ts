@@ -1,25 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginationQueryParams } from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { BlogComment } from './blog-comment.model';
 import { CreateBlogCommentDto } from './dto/create-blog-comment.dto';
 import { PatchBlogCommentDto } from './dto/patch-blog-comment.dto';
 
-// блогКоммент - блог и юзер !!!!!!!!
-// блог - юзер !!!!!!
-// конкурсКоммент - конкурс и юзер !!!!!!!!!!
-// конкурс - юзер !!!!!!!
-// юзер - конкурс !!!!!
-// букКоммент - бук и юзер !!!!!!!!
-// рейтинг - бук и юзер !!!!!!!!
-// бук - юзер !!!!!!!!
-// букмарк - юзер, бук, прогресс !!!!!!!!
-// чаптер - бук, прогресс !!!!!!!!
-// пэйдж - чаптер, прогресс !!!!!!!!
-// прогресс - пэйдж, чаптер, букмарк !!!!!!!!
-
 @Injectable()
 export class BlogCommentService {
+  private static readonly DEFAULT_LIMIT = 7;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(
     @InjectModel(BlogComment) private blogCommentRepository: typeof BlogComment,
   ) {}
@@ -34,10 +25,14 @@ export class BlogCommentService {
     return blogComment;
   }
 
-  async getAllBlogComments(limit?: number, offset?: number) {
+  async getAllBlogComments({
+    limit = BlogCommentService.DEFAULT_LIMIT,
+    offset = BlogCommentService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['img', 'name'] },
     });
     return blogComments;
@@ -49,21 +44,35 @@ export class BlogCommentService {
     return blogComment;
   }
 
-  async getBlogCommentsByBlogId(id: number, limit?: number, offset?: number) {
+  async getBlogCommentsByBlogId(
+    id: number,
+    {
+      limit = BlogCommentService.DEFAULT_LIMIT,
+      offset = BlogCommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
       where: { blogId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['img', 'name'] },
     });
     return blogComments;
   }
 
-  async getBlogCommentsByUserId(id: number, limit?: number, offset?: number) {
+  async getBlogCommentsByUserId(
+    id: number,
+    {
+      limit = BlogCommentService.DEFAULT_LIMIT,
+      offset = BlogCommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const blogComments = await this.blogCommentRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return blogComments;
   }

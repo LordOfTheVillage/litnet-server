@@ -9,6 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { query } from 'express';
+import { PaginationQueryParams } from 'src/types/types';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PatchCommentDto } from './dto/patch-comment.dto';
@@ -25,24 +27,22 @@ export class CommentController {
   @Get('/book/:id')
   getByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.commentService.getCommentsByBookId(id, limit, offset);
+    return this.commentService.getCommentsByBookId(id, query);
   }
 
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.commentService.getCommentsByUserId(id, limit, offset);
+    return this.commentService.getCommentsByUserId(id, query);
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.commentService.getAllComments(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.commentService.getAllComments(query);
   }
 
   @Get('/:id')

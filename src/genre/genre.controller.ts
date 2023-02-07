@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreService } from './genre.service';
 
@@ -26,8 +27,8 @@ export class GenreController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.genreService.getAllGenres(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.genreService.getAllGenres(query);
   }
 
   @Delete('/:id')

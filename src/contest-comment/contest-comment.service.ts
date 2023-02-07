@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginationQueryParams } from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { ContestComment } from './contest-comment.model';
 import { CreateContestCommentDto } from './dto/create-contest-comment.dto';
@@ -7,6 +8,9 @@ import { PatchContestCommentDto } from './dto/patch-contest-comment.dto';
 
 @Injectable()
 export class ContestCommentService {
+  private static readonly DEFAULT_LIMIT = 7;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(
     @InjectModel(ContestComment)
     private contestCommentRepository: typeof ContestComment,
@@ -30,30 +34,48 @@ export class ContestCommentService {
     return comment;
   }
 
-  async getCommentsByContestId(id: number, limit: number, offset: number) {
-    const comments = await this.contestCommentRepository.findAll({
+  async getCommentsByContestId(
+    id: number,
+    {
+      limit = ContestCommentService.DEFAULT_LIMIT,
+      offset = ContestCommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
+    const comments = await this.contestCommentRepository.findAndCountAll({
       where: { contestId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
 
-  async getCommentsByUserId(id: number, limit: number, offset: number) {
-    const comments = await this.contestCommentRepository.findAll({
+  async getCommentsByUserId(
+    id: number,
+    {
+      limit = ContestCommentService.DEFAULT_LIMIT,
+      offset = ContestCommentService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
+    const comments = await this.contestCommentRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;
   }
 
-  async getAllComments(limit: number, offset: number) {
-    const comments = await this.contestCommentRepository.findAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+  async getAllComments({
+    limit = ContestCommentService.DEFAULT_LIMIT,
+    offset = ContestCommentService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
+    const comments = await this.contestCommentRepository.findAndCountAll({
+      distinct: true,
+      limit,
+      offset,
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
     return comments;

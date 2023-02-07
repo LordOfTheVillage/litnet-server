@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { PatchRatingDto } from './dto/patch-rating.dto';
 import { RatingService } from './rating.service';
@@ -23,26 +24,24 @@ export class RatingController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.ratingService.getAllRatings(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.ratingService.getAllRatings(query);
   }
 
   @Get('/book/:id')
   getByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.ratingService.getRatingsByBookId(id, limit, offset);
+    return this.ratingService.getRatingsByBookId(id, query);
   }
 
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.ratingService.getRatingsByUserId(id, limit, offset);
+    return this.ratingService.getRatingsByUserId(id, query);
   }
 
   @Get('/:id')

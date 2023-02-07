@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryParams } from 'src/types/types';
 import { BlogCommentService } from './blog-comment.service';
 import { CreateBlogCommentDto } from './dto/create-blog-comment.dto';
 import { PatchBlogCommentDto } from './dto/patch-blog-comment.dto';
@@ -28,8 +29,8 @@ export class BlogCommentController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.blogCommentService.getAllBlogComments(limit, offset);
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.blogCommentService.getAllBlogComments(query);
   }
 
   @Patch('/:id')
@@ -43,19 +44,17 @@ export class BlogCommentController {
   @Get('/blog/:id')
   getByBlogId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams
   ) {
-    return this.blogCommentService.getBlogCommentsByBlogId(id, limit, offset);
+    return this.blogCommentService.getBlogCommentsByBlogId(id, query);
   }
 
   @Get('/user/:id')
   getByUserId(
     @Param('id', ParseIntPipe) id: number,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query() query: PaginationQueryParams
   ) {
-    return this.blogCommentService.getBlogCommentsByUserId(id, limit, offset);
+    return this.blogCommentService.getBlogCommentsByUserId(id, query);
   }
 
   @Delete('/:id')

@@ -1,11 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginationQueryParams } from 'src/types/types';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { PatchRatingDto } from './dto/patch-rating.dto';
 import { Rating } from './rating.model';
 
 @Injectable()
 export class RatingService {
+  private static readonly DEFAULT_LIMIT = 10;
+  private static readonly DEFAULT_OFFSET = 0;
+
   constructor(@InjectModel(Rating) private ratingRepository: typeof Rating) {}
 
   async createRating(dto: CreateRatingDto) {
@@ -18,28 +22,46 @@ export class RatingService {
     return rating;
   }
 
-  async getAllRatings(limit?: number, offset?: number) {
+  async getAllRatings({
+    limit = RatingService.DEFAULT_LIMIT,
+    offset = RatingService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
     const ratings = await this.ratingRepository.findAndCountAll({
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return ratings;
   }
 
-  async getRatingsByBookId(id: number, limit?: number, offset?: number) {
+  async getRatingsByBookId(
+    id: number,
+    {
+      limit = RatingService.DEFAULT_LIMIT,
+      offset = RatingService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const rating = await this.ratingRepository.findAndCountAll({
+      distinct: true,
       where: { bookId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      limit,
+      offset,
     });
     return rating;
   }
 
-  async getRatingsByUserId(id: number, limit?: number, offset?: number) {
+  async getRatingsByUserId(
+    id: number,
+    {
+      limit = RatingService.DEFAULT_LIMIT,
+      offset = RatingService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const rating = await this.ratingRepository.findAndCountAll({
       where: { userId: id },
-      limit: limit || undefined,
-      offset: offset || undefined,
+      distinct: true,
+      limit,
+      offset,
     });
     return rating;
   }
