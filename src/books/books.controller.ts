@@ -30,8 +30,13 @@ export class BooksController {
   }
 
   @Get()
-  getAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
-    return this.booksService.getAllBooks(limit, offset);
+  getAll(
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+    @Query('sort') sort?: string,
+    @Query('order') order?: string,
+  ) {
+    return this.booksService.getAllBooks(limit, offset, sort, order);
   }
 
   @Get('/user/:id')
@@ -39,8 +44,10 @@ export class BooksController {
     @Param('id', ParseIntPipe) id: number,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
+    @Query('sort') sort?: string,
+    @Query('order') order?: string,
   ) {
-    return this.booksService.getBooksByUserId(id, limit, offset);
+    return this.booksService.getBooksByUserId(id, limit, offset, sort, order);
   }
 
   @Get('/genre')

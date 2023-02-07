@@ -52,13 +52,19 @@ export class BooksService {
     return book;
   }
 
-  async getAllBooks(limit?: number, offset?: number) {
+  async getAllBooks(
+    limit?: number,
+    offset?: number,
+    sort?: string,
+    order?: string,
+  ) {
     const books = await this.bookRepository.findAndCountAll({
       limit: limit || undefined,
       offset: offset || undefined,
       include: BooksService.includeObject,
     });
-    return books;
+
+    return this.switchSorting(books, sort, order);
   }
 
   async getBooksByGenreName(
@@ -77,28 +83,18 @@ export class BooksService {
       offset: offset || undefined,
     });
 
-    if (!sort && !order) return books;
-
-    switch (sort) {
-      case 'rating':
-        return this.sortByRating(books, order);
-      case 'date':
-        return this.sortByDate(books, order);
-      case 'bookmarks':
-        return this.sortByBookmarks(books, order);
-      default:
-        return books;
-    }
+    return this.switchSorting(books, sort, order);
   }
 
-  async getBooksByUserId(id: number, limit?: number, offset?: number) {
+  async getBooksByUserId(id: number, limit?: number, offset?: number, sort?: string, order?: string) {
     const books = await this.bookRepository.findAndCountAll({
       where: { userId: id },
       limit: limit || undefined,
       offset: offset || undefined,
       include: BooksService.includeObject,
     });
-    return books;
+
+    return this.switchSorting(books, sort, order);
   }
 
   async getBookById(id: number) {
@@ -151,6 +147,21 @@ export class BooksService {
 
     await book.destroy();
     return book;
+  }
+
+  private switchSorting(books, sort, order) {
+    if (!sort && !order) return books;
+
+    switch (sort) {
+      case 'rating':
+        return this.sortByRating(books, order);
+      case 'date':
+        return this.sortByDate(books, order);
+      case 'bookmarks':
+        return this.sortByBookmarks(books, order);
+      default:
+        return books;
+    }
   }
 
   private sortByBookmarks(books, order: string) {
