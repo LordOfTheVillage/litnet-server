@@ -48,8 +48,16 @@ export class BooksController {
     @Query('genre') genre: string,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
+    @Query('sort') sort?: string,
+    @Query('order') order?: string,
   ) {
-    return this.booksService.getBooksByGenreName(genre, limit, offset);
+    return this.booksService.getBooksByGenreName(
+      genre,
+      limit,
+      offset,
+      sort,
+      order,
+    );
   }
 
   @Get('/:id')

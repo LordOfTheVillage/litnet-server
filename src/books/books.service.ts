@@ -61,18 +61,34 @@ export class BooksService {
     return books;
   }
 
-  async getBooksByGenreName(name: string, limit?: number, offset?: number) {
+  async getBooksByGenreName(
+    name: string,
+    limit?: number,
+    offset?: number,
+    sort?: string,
+    order?: string,
+  ) {
     const books = await this.bookRepository.findAndCountAll({
-      include: {
-        model: Genre,
-        where: { name },
-        attributes: [],
-        through: { attributes: [] },
-      },
+      include: [
+        ...BooksService.includeObject,
+        { model: Genre, where: { name } },
+      ],
       limit: limit || undefined,
       offset: offset || undefined,
     });
-    return books;
+
+    if (!sort && !order) return books;
+
+    switch (sort) {
+      case 'rating':
+        return this.sortByRating(books, order);
+      case 'date':
+        return this.sortByDate(books, order);
+      case 'bookmarks':
+        return this.sortByBookmarks(books, order);
+      default:
+        return books;
+    }
   }
 
   async getBooksByUserId(id: number, limit?: number, offset?: number) {
@@ -121,16 +137,6 @@ export class BooksService {
       async (comment) => await this.commentService.deleteComment(comment.id),
     );
 
-    // РАБОТАЕТ, НО ТОГДА СТРАТЕГИЯ ПО СОЗДАНИЮ КНИГ ПО СУЩЕСТВУЮЩИМ ЖАНРАМ НЕ РАБОТАЕТ
-
-    // const genres = await this.genreService.getGenresByBookId(id);
-    // await genres.forEach(async (genre) => {
-    //   const books = genre.books || [];
-    //   if (books.length === 1 && books[0].id === id) {
-    //     await this.genreService.deleteGenre(genre.id);
-    //   }
-    // });
-
     const chapters = book.chapters || [];
     await chapters.forEach(
       async (chapter) => await this.chapterService.deleteChapter(chapter.id),
@@ -145,6 +151,39 @@ export class BooksService {
 
     await book.destroy();
     return book;
+  }
+
+  private sortByBookmarks(books, order: string) {
+    const sortedBooks = [...books.rows].sort((a, b) => {
+      return a.bookmarks.length - b.bookmarks.length;
+    });
+    return this.setOrderedBooks(sortedBooks, books.count, order);
+  }
+
+  private sortByDate(books, order: string) {
+    const sortedBooks = [...books.rows].sort((a, b) => {
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
+    return this.setOrderedBooks(sortedBooks, books.count, order);
+  }
+
+  private sortByRating(books, order: string) {
+    const sortedBooks = [...books.rows].sort((a, b) => {
+      const aRating = a.ratings.reduce((acc, rating) => {
+        return acc + rating.rating;
+      }, 0);
+      const bRating = b.ratings.reduce((acc, rating) => {
+        return acc + rating.rating;
+      }, 0);
+      return aRating - bRating;
+    });
+    return this.setOrderedBooks(sortedBooks, books.count, order);
+  }
+
+  private setOrderedBooks(sortedBooks, count: number, order: string) {
+    return order.toLowerCase().trim() === 'desc'
+      ? { rows: sortedBooks.reverse(), count }
+      : { rows: sortedBooks, count };
   }
 
   private async validateBook(book: Book) {
