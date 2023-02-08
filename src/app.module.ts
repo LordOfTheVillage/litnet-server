@@ -41,6 +41,9 @@ import { ContestComment } from './contest-comment/contest-comment.model';
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
+      dialectOptions: {
+        ssl: { rejectUnauthorized: false },
+      },
       host: process.env.POSTGRES_HOST,
       port: Number(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
