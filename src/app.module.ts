@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './users/user.model';
 import { UsersModule } from './users/users.module';
@@ -37,9 +36,6 @@ import { ContestComment } from './contest-comment/contest-comment.model';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV}.env`,
-    }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
@@ -66,7 +62,7 @@ import { ContestComment } from './contest-comment/contest-comment.model';
         ContestGenre,
         Blog,
         BlogComment,
-        ContestComment
+        ContestComment,
       ],
       autoLoadModels: true,
       synchronize: true,
