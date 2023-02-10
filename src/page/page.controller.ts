@@ -23,8 +23,8 @@ export class PageController {
     return this.pageService.createPage(dto);
   }
 
-  @Get('/book/:id')
-  getByBookId(
+  @Get('/chapter/:id')
+  getByChapterId(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: PaginationQueryParams,
   ) {
