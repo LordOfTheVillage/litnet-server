@@ -19,8 +19,8 @@ import { PatchBookDto } from './dto/patch-book.dto';
 
 @Injectable()
 export class BooksService {
-  private static readonly DEFAULT_LIMIT = 10;
-  private static readonly DEFAULT_OFFSET = 0;
+  private static readonly DEFAULT_LIMIT = undefined;
+  private static readonly DEFAULT_OFFSET = undefined;
   private static includeObject = [
     { model: Genre, attributes: ['id', 'name'], through: { attributes: [] } },
     { model: Chapter, attributes: ['id'] },
