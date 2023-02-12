@@ -1,7 +1,6 @@
 import { IsString, IsEmail, Length } from 'class-validator';
 
 export class AuthUserDto {
-
   @IsString({ message: 'Must be a string' })
   @IsEmail({}, { message: 'Incorrect email' })
   readonly email: string;

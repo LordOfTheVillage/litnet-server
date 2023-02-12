@@ -9,14 +9,11 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/login')
+  @UseInterceptors(FileInterceptor('img'))
   login(@Body() dto: AuthUserDto) {
     return this.authService.login(dto);
   }
 
-  // @Post('/registration')
-  // registration(@Body() dto: CreateUserDto) {
-  //   return this.authService.registration(dto);
-  // }
   @Post('/registration')
   @UseInterceptors(FileInterceptor('img'))
   create(
