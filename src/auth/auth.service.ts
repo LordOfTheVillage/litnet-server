@@ -41,7 +41,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  private checkUser(user: CreateUserDto, type: string) { 
+  private checkUser(user: CreateUserDto, type: string) {
     if (user) {
       throw new HttpException(
         `User with this ${type} already exists`,
@@ -61,6 +61,7 @@ export class AuthService {
     const payload = { id, email, autobiography, readingView, name, img };
     return {
       token: this.jwtService.sign(payload),
+      user: payload,
     };
   }
 
