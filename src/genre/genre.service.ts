@@ -18,7 +18,7 @@ export class GenreService {
 
   async getGenreById(id: number) {
     const genre = await this.genreRepository.findByPk(id);
-    await this.validateGenre(genre);
+    this.validateGenre(genre);
     return genre;
   }
 
@@ -27,7 +27,7 @@ export class GenreService {
       where: { name },
       include: { all: true },
     });
-    await this.validateGenre(genre);
+    this.validateGenre(genre);
     return genre;
   }
 
@@ -57,7 +57,7 @@ export class GenreService {
     return genre;
   }
 
-  private async validateGenre(genre: Genre) {
+  private validateGenre(genre: Genre) {
     if (!genre) {
       throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
     }

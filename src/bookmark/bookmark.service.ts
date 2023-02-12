@@ -26,7 +26,7 @@ export class BookmarkService {
     const testBookmark = await this.bookmarkRepository.findOne({
       where: { userId, bookId },
     });
-    await this.validateBookmark(testBookmark, true);
+    this.validateBookmark(testBookmark, true);
 
     const readingProgress =
       await this.readingProgressService.createReadingProgress({
@@ -43,7 +43,7 @@ export class BookmarkService {
 
   async getById(id: number) {
     const bookmark = await this.bookmarkRepository.findByPk(id);
-    await this.validateBookmark(bookmark);
+    this.validateBookmark(bookmark);
     return bookmark;
   }
 
@@ -93,7 +93,7 @@ export class BookmarkService {
 
   async deleteBookmark(id: number) {
     const bookmark = await this.bookmarkRepository.findByPk(id);
-    await this.validateBookmark(bookmark);
+    this.validateBookmark(bookmark);
     await this.readingProgressService.deleteReadingProgress(
       bookmark.progressId,
     );
@@ -103,7 +103,7 @@ export class BookmarkService {
 
   async updateBookmark(id: number, dto: PatchBookmarkDto) {
     const bookmark = await this.bookmarkRepository.findByPk(id);
-    await this.validateBookmark(bookmark);
+    this.validateBookmark(bookmark);
     const readingProgress = await this.readingProgressService.getById(
       bookmark.progressId,
     );
@@ -114,7 +114,7 @@ export class BookmarkService {
     return bookmark;
   }
 
-  private async validateBookmark(bookmark: Bookmark, reverse: boolean = false) {
+  private validateBookmark(bookmark: Bookmark, reverse: boolean = false) {
     if (reverse ? bookmark : !bookmark) {
       throw new HttpException(
         'Such bookmark does not exist',

@@ -20,7 +20,7 @@ export class ContestCommentService {
     const suspectComment = await this.contestCommentRepository.findOne({
       where: { contestId: dto.contestId, userId: dto.userId },
     });
-    await this.checkExistingComment(suspectComment);
+    this.checkExistingComment(suspectComment);
 
     const comment = await this.contestCommentRepository.create(dto);
     return comment;
@@ -30,7 +30,7 @@ export class ContestCommentService {
     const comment = await this.contestCommentRepository.findByPk(id, {
       include: { model: User, attributes: ['id', 'name', 'img'] },
     });
-    await this.validateComment(comment);
+    this.validateComment(comment);
     return comment;
   }
 
@@ -95,13 +95,13 @@ export class ContestCommentService {
     return comment;
   }
 
-  private async validateComment(comment: ContestComment) {
+  private validateComment(comment: ContestComment) {
     if (!comment) {
       throw new HttpException('Comment not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  private async checkExistingComment(comment: ContestComment) {
+  private checkExistingComment(comment: ContestComment) {
     if (comment) {
       throw new HttpException('Comment already exists', HttpStatus.BAD_REQUEST);
     }

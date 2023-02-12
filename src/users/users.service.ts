@@ -24,7 +24,7 @@ export class UsersService {
     const suspectUser = await this.userRepository.findOne({
       where: { email: dto.email },
     });
-    await this.checkExistingUser(suspectUser);
+    this.checkExistingUser(suspectUser);
     const fileName = img ? await this.fileService.createFile(img) : null;
     const user = await this.userRepository.create({ ...dto, img: fileName });
     return user;
@@ -90,7 +90,7 @@ export class UsersService {
     return user;
   }
 
-  private async checkExistingUser(user: User) {
+  private checkExistingUser(user: User) {
     if (user) {
       throw new HttpException(
         'User with this email already exists',
@@ -99,7 +99,7 @@ export class UsersService {
     }
   }
 
-  private async validateUser(user: User) {
+  private validateUser(user: User) {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }

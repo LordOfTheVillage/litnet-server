@@ -27,13 +27,8 @@ export class AuthService {
   async registration(dto: CreateUserDto, img?: any) {
     const candidateByEmail = await this.usersService.getUserByEmail(dto.email);
     const candidateByName = await this.usersService.getUserByName(dto.name);
-
-    if (candidateByEmail || candidateByName) {
-      throw new HttpException(
-        `User with this email or name already exists`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.checkUser(candidateByEmail, 'email');
+    this.checkUser(candidateByName, 'name');
 
     const hash = await bcrypt.hash(dto.password, 5);
     const user = await this.usersService.createUser(
@@ -44,6 +39,15 @@ export class AuthService {
       img,
     );
     return this.generateToken(user);
+  }
+
+  private checkUser(user: CreateUserDto, type: string) { 
+    if (user) {
+      throw new HttpException(
+        `User with this ${type} already exists`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   private async generateToken({

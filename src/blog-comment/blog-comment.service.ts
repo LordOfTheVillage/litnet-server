@@ -19,7 +19,7 @@ export class BlogCommentService {
     const suspect = await this.blogCommentRepository.findOne({
       where: { userId: +dto.userId, blogId: +dto.blogId },
     });
-    await this.checkExistingBlogComment(suspect);
+    this.checkExistingBlogComment(suspect);
 
     const blogComment = await this.blogCommentRepository.create(dto);
     return blogComment;
@@ -40,7 +40,7 @@ export class BlogCommentService {
 
   async getBlogCommentById(id: number) {
     const blogComment = await this.blogCommentRepository.findByPk(id);
-    await this.validateBlogComment(blogComment);
+    this.validateBlogComment(blogComment);
     return blogComment;
   }
 
@@ -79,7 +79,7 @@ export class BlogCommentService {
 
   async updateBlogComment(id: number, dto: PatchBlogCommentDto) {
     const blogComment = await this.blogCommentRepository.findByPk(id);
-    await this.validateBlogComment(blogComment);
+    this.validateBlogComment(blogComment);
 
     await blogComment.update(dto);
     return blogComment;
@@ -87,13 +87,13 @@ export class BlogCommentService {
 
   async deleteBlogComment(id: number) {
     const blogComment = await this.blogCommentRepository.findByPk(id);
-    await this.validateBlogComment(blogComment);
+    this.validateBlogComment(blogComment);
 
     await blogComment.destroy();
     return blogComment;
   }
 
-  private async checkExistingBlogComment(blogComment: BlogComment) {
+  private checkExistingBlogComment(blogComment: BlogComment) {
     if (blogComment) {
       throw new HttpException(
         'Blog comment already exists',
@@ -102,7 +102,7 @@ export class BlogCommentService {
     }
   }
 
-  private async validateBlogComment(blogComment: BlogComment) {
+  private validateBlogComment(blogComment: BlogComment) {
     if (!blogComment) {
       throw new HttpException('Blog comment not found', HttpStatus.NOT_FOUND);
     }

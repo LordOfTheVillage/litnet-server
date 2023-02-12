@@ -13,7 +13,6 @@ export class PageService {
   constructor(@InjectModel(Page) private pageRepository: typeof Page) {}
 
   async createPage(dto: CreatePageDto) {
-    // TODO chapter validation
     const { rows } = await this.getPagesByChapterId(dto.chapterId, {});
     const number = rows.length + 1;
     const page = await this.pageRepository.create({ ...dto, number });

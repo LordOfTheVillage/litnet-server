@@ -211,7 +211,7 @@ export class BooksService {
       : { rows: sortedBooks, count };
   }
 
-  private async validateBook(book: Book) {
+  private validateBook(book: Book) {
     if (!book) {
       throw new HttpException(
         { message: 'Such book does not exist' },

@@ -17,7 +17,7 @@ export class BlogService {
     const suspect = await this.blogRepository.findOne({
       where: { title: dto.title },
     });
-    await this.checkExistingBlog(suspect);
+    this.checkExistingBlog(suspect);
     const parsedDto = await this.parseDto(dto);
     const blog = await this.blogRepository.create(parsedDto);
     return blog;
@@ -38,7 +38,7 @@ export class BlogService {
 
   async getBlogById(id: number) {
     const blog = await this.blogRepository.findByPk(id);
-    await this.validateBlog(blog);
+    this.validateBlog(blog);
     return blog;
   }
 
@@ -61,7 +61,7 @@ export class BlogService {
 
   async updateBlog(id: number, dto: PatchBlogDto) {
     const blog = await this.blogRepository.findByPk(id);
-    await this.validateBlog(blog);
+    this.validateBlog(blog);
 
     await blog.update(dto);
     return blog;
@@ -69,7 +69,7 @@ export class BlogService {
 
   async deleteBlog(id: number) {
     const blog = await this.blogRepository.findByPk(id);
-    await this.validateBlog(blog);
+    this.validateBlog(blog);
 
     await blog.destroy();
     return blog;
@@ -83,13 +83,13 @@ export class BlogService {
     return parsedDto;
   }
 
-  private async validateBlog(blog: Blog) {
+  private validateBlog(blog: Blog) {
     if (!blog) {
       throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  private async checkExistingBlog(blog: Blog) {
+  private checkExistingBlog(blog: Blog) {
     if (blog) {
       throw new HttpException(
         'Blog with this title already exists',

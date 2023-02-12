@@ -13,31 +13,31 @@ export class ReadingProgressService {
 
   async createReadingProgress(dto: CreateReadingProgressDto) {
     const readingProgress = await this.readingProgressRepository.create(dto);
-    await this.validateProgress(readingProgress);
+    this.validateProgress(readingProgress);
     return readingProgress;
   }
 
   async getById(id: number) {
     const readingProgress = await this.readingProgressRepository.findByPk(id);
-    await this.validateProgress(readingProgress);
+    this.validateProgress(readingProgress);
     return readingProgress;
   }
 
   async updateReadingProgress(dto: PatchReadingProgressDto, id: number) {
     const readingProgress = await this.readingProgressRepository.findByPk(id);
-    await this.validateProgress(readingProgress);
+    this.validateProgress(readingProgress);
     await readingProgress.update(dto);
     return readingProgress;
   }
 
   async deleteReadingProgress(id: number) {
     const readingProgress = await this.readingProgressRepository.findByPk(id);
-    await this.validateProgress(readingProgress);
+    this.validateProgress(readingProgress);
     await readingProgress.destroy();
     return readingProgress;
   }
 
-  private async validateProgress(readingProgress: ReadingProgress) {
+  private validateProgress(readingProgress: ReadingProgress) {
     if (!readingProgress) {
       throw new HttpException(
         'Such reading progress does not exist',

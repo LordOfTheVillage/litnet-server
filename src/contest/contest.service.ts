@@ -26,12 +26,12 @@ export class ContestService {
     const suspectByTitle = await this.contestRepository.findOne({
       where: { title: dto.title },
     });
-    await this.checkExistingContest(suspectByTitle);
+    this.checkExistingContest(suspectByTitle);
 
     const suspectByUser = await this.contestRepository.findOne({
       where: { userId: +dto.userId },
     });
-    await this.checkExistingContest(suspectByUser);
+    this.checkExistingContest(suspectByUser);
 
     const parsedDto = await this.parseDto(dto);
     const fileName = img ? await this.fileService.createFile(img) : null;
@@ -46,7 +46,7 @@ export class ContestService {
 
   async getAllContests({
     limit = ContestService.DEFAULT_LIMIT,
-    offset = ContestService.DEFAULT_LIMIT,
+    offset = ContestService.DEFAULT_OFFSET,
   }: PaginationQueryParams) {
     const contests = await this.contestRepository.findAndCountAll({
       include: { model: Book, attributes: ['id'] },
@@ -61,7 +61,7 @@ export class ContestService {
     id: number,
     {
       limit = ContestService.DEFAULT_LIMIT,
-      offset = ContestService.DEFAULT_LIMIT,
+      offset = ContestService.DEFAULT_OFFSET,
     }: PaginationQueryParams,
   ) {
     const contests = await this.contestRepository.findAndCountAll({
@@ -133,13 +133,13 @@ export class ContestService {
     return contest;
   }
 
-  private async checkExistingContest(contest: Contest) {
+  private checkExistingContest(contest: Contest) {
     if (contest) {
       throw new HttpException('Contest already exists', HttpStatus.BAD_REQUEST);
     }
   }
 
-  private async validateContest(contest: Contest) {
+  private validateContest(contest: Contest) {
     if (!contest) {
       throw new HttpException('Contest does not exist', HttpStatus.NOT_FOUND);
     }
