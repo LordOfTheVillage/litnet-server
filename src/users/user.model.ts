@@ -45,6 +45,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, defaultValue: 'pages' })
   readingView: string;
 
+  @Column({ type: DataType.TEXT, defaultValue: '' })
+  autobiography: string;
+
   @Column({ type: DataType.STRING })
   img: string;
 
