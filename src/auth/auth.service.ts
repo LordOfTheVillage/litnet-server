@@ -20,7 +20,6 @@ export class AuthService {
 
   async login(dto: AuthUserDto) {
     const user = await this.validateUser(dto);
-    console.log(user);
     return this.generateToken(user);
   }
 
@@ -39,6 +38,12 @@ export class AuthService {
       img,
     );
     return this.generateToken(user);
+  }
+
+  async updatePassword(id: number, password: string) {
+    const hash: string = await bcrypt.hash(password, 5);
+    const user = await this.usersService.updatePassword({ password: hash }, id);
+    return { token: this.generateToken(user), user };
   }
 
   private checkUser(user: CreateUserDto, type: string) {

@@ -9,6 +9,7 @@ import { Comment } from 'src/comment/comment.model';
 import { Book } from 'src/books/books.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { PaginationQueryParams } from 'src/types/types';
+import { PatchUserPasswordDto } from './dto/patch-user-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -80,6 +81,13 @@ export class UsersService {
     this.validateUser(user);
     const fileName = img ? await this.fileService.createFile(img) : user.img;
     const updatedUser = await user.update({ ...dto, img: fileName });
+    return updatedUser;
+  }
+
+  async updatePassword(dto: PatchUserPasswordDto, id: number) {
+    const user = await this.userRepository.findByPk(id);
+    this.validateUser(user);
+    const updatedUser = await user.update({ ...dto });
     return updatedUser;
   }
 
