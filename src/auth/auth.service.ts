@@ -44,12 +44,16 @@ export class AuthService {
     if (!token) {
       throw new UnauthorizedException({ message: 'User is not authorized' });
     }
-    const suspect = await this.jwtService.verifyAsync(token);
-    const user = await this.usersService.getUserById(suspect.id);
-    if (user) {
-      return { token: this.generateToken(user), user };
+    try {
+      const suspect = await this.jwtService.verifyAsync(token);
+      const user = await this.usersService.getUserById(suspect.id);
+      if (user) {
+        return { token: this.generateToken(user), user };
+      }
+      throw new UnauthorizedException({ message: 'Invalid refresh token' });
+    } catch (e) {
+      throw new UnauthorizedException({ message: 'User is not authorized' });
     }
-    throw new UnauthorizedException({ message: 'Invalid refresh token' });
   }
 
   async updatePassword(id: number, password: string) {
