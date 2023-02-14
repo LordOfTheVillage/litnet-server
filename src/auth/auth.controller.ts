@@ -35,4 +35,9 @@ export class AuthController {
   ) {
     return this.authService.updatePassword(id, password);
   }
+
+  @Post('/refresh')
+  refreshToken(@Body('token') token: string) {
+    return this.authService.checkAuthorization(token);
+  }
 }

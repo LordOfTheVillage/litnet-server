@@ -40,6 +40,18 @@ export class AuthService {
     return this.generateToken(user);
   }
 
+  async checkAuthorization(token: string) {
+    if (!token) {
+      throw new UnauthorizedException({ message: 'User is not authorized' });
+    }
+    const suspect = await this.jwtService.verifyAsync(token);
+    const user = await this.usersService.getUserById(suspect.id);
+    if (user) {
+      return { token: this.generateToken(user), user };
+    }
+    throw new UnauthorizedException({ message: 'Invalid refresh token' });
+  }
+
   async updatePassword(id: number, password: string) {
     const hash: string = await bcrypt.hash(password, 5);
     const user = await this.usersService.updatePassword({ password: hash }, id);
