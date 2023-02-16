@@ -25,9 +25,7 @@ export class AuthService {
 
   async registration(dto: CreateUserDto, img?: any) {
     const candidateByEmail = await this.usersService.getUserByEmail(dto.email);
-    const candidateByName = await this.usersService.getUserByName(dto.name);
     this.checkUser(candidateByEmail, 'email');
-    this.checkUser(candidateByName, 'name');
 
     const hash = await bcrypt.hash(dto.password, 5);
     const user = await this.usersService.createUser(
@@ -48,7 +46,7 @@ export class AuthService {
       const suspect = await this.jwtService.verifyAsync(token);
       const user = await this.usersService.getUserById(suspect.id);
       if (user) {
-        return { token: this.generateToken(user), user };
+        return this.generateToken(user);
       }
       throw new UnauthorizedException({ message: 'Invalid refresh token' });
     } catch (e) {
@@ -59,7 +57,7 @@ export class AuthService {
   async updatePassword(id: number, password: string) {
     const hash: string = await bcrypt.hash(password, 5);
     const user = await this.usersService.updatePassword({ password: hash }, id);
-    return { token: this.generateToken(user), user };
+    return this.generateToken(user)
   }
 
   private checkUser(user: CreateUserDto, type: string) {
