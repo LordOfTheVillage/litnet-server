@@ -21,9 +21,14 @@ export class GenreController {
     return this.genreService.createGenre(dto);
   }
 
-  @Get('/:name')
-  getByName(@Param('name') name: string) {
-    return this.genreService.getGenreByName(name);
+  // @Get('/:name')
+  // getByName(@Param('name') name: string) {
+  //   return this.genreService.getGenreByName(name);
+  // }
+
+  @Get('/:id')
+  getById(@Param('id', ParseIntPipe) id: number) {
+    return this.genreService.getGenreById(id);
   }
 
   @Get()

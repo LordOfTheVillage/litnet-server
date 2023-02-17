@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Book } from 'src/books/books.model';
 import { PaginationQueryParams } from 'src/types/types';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './genre.model';
@@ -17,7 +18,10 @@ export class GenreService {
   }
 
   async getGenreById(id: number) {
-    const genre = await this.genreRepository.findByPk(id);
+    const genre = await this.genreRepository.findByPk(id, {
+      include: { all: true },
+    });
+    console.log(genre)
     this.validateGenre(genre);
     return genre;
   }
