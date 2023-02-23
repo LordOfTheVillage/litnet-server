@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { ChapterService } from 'src/chapter/chapter.service';
@@ -82,6 +83,9 @@ export class BooksService {
         ...BooksService.includeObject,
         { model: Genre, where: { name: genre } },
       ],
+      // where: {
+      //   '$genres$': { [Op.contains]: [genre] },
+      // },
       distinct: true,
       limit,
       offset,

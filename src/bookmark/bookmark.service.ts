@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ReadingProgress } from 'src/reading-progress/reading-progress.model';
 import { ReadingProgressService } from 'src/reading-progress/reading-progress.service';
 import { PaginationQueryParams } from 'src/types/types';
 import { Bookmark } from './bookmark.model';
@@ -42,7 +43,9 @@ export class BookmarkService {
   }
 
   async getById(id: number) {
-    const bookmark = await this.bookmarkRepository.findByPk(id);
+    const bookmark = await this.bookmarkRepository.findByPk(id, {
+      include: { model: ReadingProgress },
+    });
     this.validateBookmark(bookmark);
     return bookmark;
   }
@@ -56,6 +59,7 @@ export class BookmarkService {
   ) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { userId: id },
+      include: { model: ReadingProgress },
       distinct: true,
       limit,
       offset,
@@ -72,6 +76,7 @@ export class BookmarkService {
   ) {
     const bookmarks = await this.bookmarkRepository.findAndCountAll({
       where: { bookId: id },
+      include: { model: ReadingProgress },
       distinct: true,
       limit,
       offset,
