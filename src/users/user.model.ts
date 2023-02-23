@@ -65,7 +65,7 @@ export class User extends Model<User, UserCreationAttrs> {
   ratings: Rating[];
 
   @HasMany(() => Comment)
-  comments: Comment[];
+  bookComments: Comment[];
 
   @HasMany(() => Bookmark)
   bookmarks: Bookmark[];
