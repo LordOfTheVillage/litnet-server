@@ -57,7 +57,7 @@ export class AuthService {
   async updatePassword(id: number, password: string) {
     const hash: string = await bcrypt.hash(password, 5);
     const user = await this.usersService.updatePassword({ password: hash }, id);
-    return this.generateToken(user)
+    return this.generateToken(user);
   }
 
   private checkUser(user: CreateUserDto, type: string) {
@@ -76,8 +76,17 @@ export class AuthService {
     readingView,
     name,
     img,
+    bookmarks = [],
   }) {
-    const payload = { id, email, autobiography, readingView, name, img };
+    const payload = {
+      id,
+      email,
+      autobiography,
+      readingView,
+      name,
+      img,
+      bookmarks,
+    };
     return {
       token: this.jwtService.sign(payload),
       user: payload,

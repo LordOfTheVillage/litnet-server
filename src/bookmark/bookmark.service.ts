@@ -26,20 +26,27 @@ export class BookmarkService {
   }: CreateBookmarkDto) {
     const testBookmark = await this.bookmarkRepository.findOne({
       where: { userId, bookId },
+      include: { model: ReadingProgress },
     });
-    this.validateBookmark(testBookmark, true);
-
-    const readingProgress =
-      await this.readingProgressService.createReadingProgress({
+    // this.validateBookmark(testBookmark, true);
+    if (testBookmark) {
+      return await this.updateBookmark(testBookmark.id, {
         chapterId,
         pageId,
       });
-    const bookmark = await this.bookmarkRepository.create({
-      userId,
-      bookId,
-      progressId: readingProgress.id,
-    });
-    return bookmark;
+    } else {
+      const readingProgress =
+        await this.readingProgressService.createReadingProgress({
+          chapterId,
+          pageId,
+        });
+      const bookmark = await this.bookmarkRepository.create({
+        userId,
+        bookId,
+        progressId: readingProgress.id,
+      });
+      return bookmark;
+    }
   }
 
   async getById(id: number) {

@@ -14,7 +14,7 @@ export class PageService {
 
   async createPage(dto: CreatePageDto) {
     const { rows } = await this.getPagesByChapterId(dto.chapterId, {});
-    const number = rows.length + 1;
+    const number = dto.number || rows.length + 1;
     const page = await this.pageRepository.create({ ...dto, number });
     return page;
   }

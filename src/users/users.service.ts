@@ -49,7 +49,7 @@ export class UsersService {
         { model: Comment, attributes: ['id'] },
         { model: Contest, attributes: ['id'] },
         { model: Book, attributes: ['id'] },
-        { model: Bookmark, attributes: ['id'] },
+        { model: Bookmark },
       ],
     });
     return user;
@@ -116,6 +116,12 @@ export class UsersService {
   private async getUserByProperty(property: string, value: string) {
     const user = await this.userRepository.findOne({
       where: { [property]: value },
+      include: [
+        { model: Comment, attributes: ['id'] },
+        { model: Contest, attributes: ['id'] },
+        { model: Book, attributes: ['id'] },
+        { model: Bookmark },
+      ],
     });
     return user;
   }

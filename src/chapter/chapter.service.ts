@@ -109,14 +109,18 @@ export class ChapterService {
     return pages;
   }
 
-  private async createPages(pages: string[], chapterId) {
-    pages.forEach(async (page) => {
-      await this.pageService.createPage({ text: page, chapterId });
+  private async createPages(pages: string[], chapterId: number) {
+    pages.forEach(async (page, i) => {
+      await this.pageService.createPage({
+        text: page,
+        chapterId,
+        number: i + 1,
+      });
     });
   }
 
   private async deletePagesByChapterId(pages) {
-    pages.forEach(async (page) => {
+    await pages.forEach(async (page) => {
       await this.pageService.deletePage(page.id);
     });
   }

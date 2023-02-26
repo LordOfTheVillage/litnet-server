@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Chapter } from 'src/chapter/chapter.model';
+import { Page } from 'src/page/page.model';
 import { CreateReadingProgressDto } from './dto/create-reading-progress.dto';
 import { PatchReadingProgressDto } from './dto/patch-reading-progrss.dto';
 import { ReadingProgress } from './reading-progress.model';
@@ -19,6 +21,14 @@ export class ReadingProgressService {
 
   async getById(id: number) {
     const readingProgress = await this.readingProgressRepository.findByPk(id);
+    this.validateProgress(readingProgress);
+    return readingProgress;
+  }
+
+  async getChapter(id: number) {
+    const readingProgress = await this.readingProgressRepository.findByPk(id, {
+      include: [{ model: Chapter }, { model: Page }],
+    });
     this.validateProgress(readingProgress);
     return readingProgress;
   }
