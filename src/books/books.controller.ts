@@ -35,6 +35,12 @@ export class BooksController {
     return this.booksService.getAllBooks(query);
   }
 
+  
+  @Get("/library/:userId")
+  getLibraryBooks(@Param('userId', ParseIntPipe) userId: number, @Query() query: BookQueryParams) {
+    return this.booksService.getLibraryBooks(userId, query);
+  }
+
   @Get('/user/:id')
   getAllByUser(
     @Param('id', ParseIntPipe) id: number,

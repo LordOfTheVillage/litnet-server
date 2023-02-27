@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Bookmark } from 'src/bookmark/bookmark.model';
@@ -89,6 +94,29 @@ export class BooksService {
       distinct: true,
       limit,
       offset,
+    });
+
+    return this.switchSorting(books, sort, order);
+  }
+
+  async getLibraryBooks(
+    userId: number,
+    {
+      limit = BooksService.DEFAULT_LIMIT,
+      offset = BooksService.DEFAULT_OFFSET,
+      sort,
+      order,
+    }: BookQueryParams,
+  ) {
+    const user = await this.userService.getUserById(userId);
+    if (!user) throw new NotFoundException('User with this id not found');
+    const bookIds = user.bookmarks.map((b) => b.bookId);
+    const books = await this.bookRepository.findAndCountAll({
+      where: { id: bookIds },
+      distinct: true,
+      limit,
+      offset,
+      include: BooksService.includeObject,
     });
 
     return this.switchSorting(books, sort, order);
