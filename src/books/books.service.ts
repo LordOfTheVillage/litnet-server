@@ -151,6 +151,32 @@ export class BooksService {
     return book;
   }
 
+  async getVerifiedBooks({
+    limit = BooksService.DEFAULT_LIMIT,
+    offset = BooksService.DEFAULT_OFFSET,
+    sort,
+    order,
+  }: BookQueryParams) {
+    const books = await this.bookRepository.findAndCountAll({
+      where: { verified: false },
+      distinct: true,
+      limit,
+      offset,
+      include: BooksService.includeObject,
+    });
+
+    return this.switchSorting(books, sort, order);
+  }
+
+  async verifyBook(id: number) {
+    const book = await this.bookRepository.findOne({
+      where: { id },
+    });
+    this.validateBook(book);
+    const result = await book.update({ ...book, verified: true });
+    return result;
+  }
+
   async updateBook({ genres, ...dto }: PatchBookDto, id: number, img?) {
     const book = await this.bookRepository.findOne({ where: { id } });
     this.validateBook(book);

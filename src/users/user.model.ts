@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -15,12 +16,14 @@ import { Comment } from 'src/comment/comment.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { Contest } from 'src/contest/models/contest.model';
 import { Rating } from 'src/rating/rating.model';
+import { Role } from 'src/role/role.model';
 
 interface UserCreationAttrs {
   name: string;
   email: string;
   password: string;
   img: string;
+  roleId: number;
 }
 
 @Table({ tableName: 'users' })
@@ -54,6 +57,19 @@ export class User extends Model<User, UserCreationAttrs> {
   @ForeignKey(() => Contest)
   @Column({ type: DataType.INTEGER })
   contestId: number;
+
+  @ForeignKey(() => Role)
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  roleId: number;
+
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  banned: boolean;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  banReason: string;
+
+  @BelongsTo(() => Role)
+  role: Role;
 
   @HasOne(() => Contest)
   contest: Contest;

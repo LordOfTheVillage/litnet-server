@@ -10,8 +10,11 @@ import {
   ParseIntPipe,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RoleGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/roles.decorator';
 import { GenreQueryParams, BookQueryParams } from 'src/types/types';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -35,9 +38,11 @@ export class BooksController {
     return this.booksService.getAllBooks(query);
   }
 
-  
-  @Get("/library/:userId")
-  getLibraryBooks(@Param('userId', ParseIntPipe) userId: number, @Query() query: BookQueryParams) {
+  @Get('/library/:userId')
+  getLibraryBooks(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query() query: BookQueryParams,
+  ) {
     return this.booksService.getLibraryBooks(userId, query);
   }
 
@@ -57,6 +62,22 @@ export class BooksController {
   @Get('/:id')
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.getBookById(id);
+  }
+
+  // TODO get non-verified books
+  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  @Get('/verify/list')
+  getVerifiedBooks(@Query() query: BookQueryParams) {
+    return this.booksService.getVerifiedBooks(query);
+  }
+
+  // TODO verify book
+  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  @Post('/verify/:id')
+  verifyBook(@Param('id', ParseIntPipe) id: number) {
+    return this.booksService.verifyBook(id);
   }
 
   @Patch('/:id')

@@ -17,6 +17,7 @@ import { RatingModule } from 'src/rating/rating.module';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Contest } from 'src/contest/models/contest.model';
 import { ContestBook } from 'src/contest/models/contest-book.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [BooksService],
@@ -39,6 +40,7 @@ import { ContestBook } from 'src/contest/models/contest-book.model';
     ChapterModule,
     CommentModule,
     RatingModule,
+    AuthModule,
   ],
   exports: [BooksService],
 })

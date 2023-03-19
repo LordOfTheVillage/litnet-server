@@ -9,6 +9,8 @@ import { Book } from 'src/books/books.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
+import { Role } from 'src/role/role.model';
+import { RoleModule } from 'src/role/role.module';
 import { User } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -17,9 +19,10 @@ import { UsersService } from './users.service';
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, Book, Rating, Bookmark, Blog, BlogComment, ContestComment]),
+    SequelizeModule.forFeature([User, Book, Rating, Bookmark, Blog, BlogComment, ContestComment, Role]),
     forwardRef(() => AuthModule),
     FileModule,
+    RoleModule
   ],
   exports: [UsersService],
 })

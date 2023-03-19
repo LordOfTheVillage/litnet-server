@@ -39,6 +39,9 @@ export class Book extends Model<Book, BookCreationAttrs> {
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   title: string;
 
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  verified: boolean;
+
   @Column({ type: DataType.TEXT, allowNull: false })
   description: string;
 

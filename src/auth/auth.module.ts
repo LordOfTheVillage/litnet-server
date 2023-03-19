@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
     forwardRef(() => UsersModule),
     JwtModule.register({
       secret: process.env.SECRET_KEY || 'secretKey',
-      signOptions: { expiresIn: '24h' },
+      signOptions: { expiresIn: '24h' }, // TODO: env variable for EXPIRATION TIME
     }),
   ],
   exports: [JwtModule, AuthService],

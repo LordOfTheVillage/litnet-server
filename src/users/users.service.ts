@@ -1,4 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  MethodNotAllowedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,6 +17,10 @@ import { Book } from 'src/books/books.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { PaginationQueryParams } from 'src/types/types';
 import { PatchUserPasswordDto } from './dto/patch-user-password.dto';
+import { RoleService } from 'src/role/role.service';
+import { Role } from 'src/role/role.model';
+import { BanUserDto } from './dto/ban-user.dto';
+import { AddRoleDto } from './dto/add-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +30,7 @@ export class UsersService {
   constructor(
     @InjectModel(User) private userRepository: typeof User,
     private fileService: FileService,
+    private roleService: RoleService,
   ) {}
 
   async createUser(dto: CreateUserDto, img?: any) {
@@ -27,7 +39,13 @@ export class UsersService {
     });
     this.checkExistingUser(suspectUser);
     const fileName = img ? await this.fileService.createFile(img) : null;
-    const user = await this.userRepository.create({ ...dto, img: fileName });
+    const role = await this.roleService.getRoleByValue('USER');
+    const user = await this.userRepository.create({
+      ...dto,
+      img: fileName,
+      roleId: role.id,
+    });
+    await user.$set('role', role);
     return user;
   }
 
@@ -39,6 +57,7 @@ export class UsersService {
       distinct: true,
       limit,
       offset,
+      include: { model: Role, attributes: ['value'] },
     });
     return users;
   }
@@ -50,6 +69,7 @@ export class UsersService {
         { model: Contest, attributes: ['id'] },
         { model: Book, attributes: ['id'] },
         { model: Bookmark },
+        { model: Role, attributes: ['value'] },
       ],
     });
     return user;
@@ -98,18 +118,41 @@ export class UsersService {
     return user;
   }
 
+  async addRole(dto: AddRoleDto) {
+    const user = await this.userRepository.findByPk(dto.userId);
+    const role = await this.roleService.getRoleByValue(dto.value);
+    if (role && user) {
+      await user.$set('role', role.id);
+      return dto;
+    }
+    throw new NotFoundException('User or role not found');
+  }
+
+  async banUser(dto: BanUserDto) {
+    const user = await this.userRepository.findByPk(dto.userId, {
+      include: { model: Role },
+    });
+    this.validateUser(user);
+
+    if (user.role.value === 'ADMIN') {
+      throw new MethodNotAllowedException('User has an admin role');
+    }
+
+    user.banned = true;
+    user.banReason = dto.banReason;
+    await user.save();
+    return user;
+  }
+
   private checkExistingUser(user: User) {
     if (user) {
-      throw new HttpException(
-        'User with this email already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new ConflictException('User with this email already exists');
     }
   }
 
   private validateUser(user: User) {
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('User not found');
     }
   }
 
@@ -121,6 +164,7 @@ export class UsersService {
         { model: Contest, attributes: ['id'] },
         { model: Book, attributes: ['id'] },
         { model: Bookmark },
+        { model: Role, attributes: ['value'] },
       ],
     });
     return user;

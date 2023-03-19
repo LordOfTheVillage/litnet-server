@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import {
+  BadRequestException,
   HttpException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt/dist';
@@ -10,6 +12,7 @@ import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { FileService } from 'src/file/file.service';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class AuthService {
@@ -62,44 +65,29 @@ export class AuthService {
 
   private checkUser(user: CreateUserDto, type: string) {
     if (user) {
-      throw new HttpException(
-        `User with this ${type} already exists`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException(`User with this ${type} already exists`);
     }
   }
 
-  private async generateToken({
-    id,
-    email,
-    autobiography,
-    readingView,
-    name,
-    img,
-    bookmarks = [],
-  }) {
-    const payload = {
-      id,
-      email,
-      autobiography,
-      readingView,
-      name,
-      img,
-      bookmarks,
-    };
+  private async generateToken(user: User) {
+    const { password, ...payload } = { ...user.dataValues };
+    if (!payload.books) payload.books = [];
+    if (!payload.role) payload.role = await user.$get('role');
+
     return {
-      token: this.jwtService.sign(payload),
-      user: payload,
+      token: this.jwtService.sign(payload as User),
+      user: payload as User,
     };
   }
 
   private async validateUser(dto: AuthUserDto) {
     const user = await this.usersService.getUserByEmail(dto.email);
+    if (user === null)
+      throw new NotFoundException('There is no user with this emil');
     const passwordEquals = await bcrypt.compare(dto.password, user.password);
-    // const passwordEquals = dto.password === user.password;
     if (user && passwordEquals) {
       return user;
     }
-    throw new UnauthorizedException({ message: 'Invalid email or password' });
+    throw new UnauthorizedException('Invalid email or password');
   }
 }
