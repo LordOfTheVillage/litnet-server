@@ -44,6 +44,14 @@ export class RatingController {
     return this.ratingService.getRatingsByUserId(id, query);
   }
 
+  @Get('/user/:userId/book/:bookId')
+  getByUserIdAndBookId(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('bookId', ParseIntPipe) bookId: number,
+  ) {
+    return this.ratingService.getRatingByIds(userId, bookId);
+  }
+
   @Get('/:id')
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.ratingService.getRatingById(id);

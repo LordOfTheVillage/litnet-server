@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ReadingProgress } from 'src/reading-progress/reading-progress.model';
 import { ReadingProgressService } from 'src/reading-progress/reading-progress.service';
@@ -106,10 +106,10 @@ export class BookmarkService {
   async deleteBookmark(id: number) {
     const bookmark = await this.bookmarkRepository.findByPk(id);
     this.validateBookmark(bookmark);
+    await bookmark.destroy();
     await this.readingProgressService.deleteReadingProgress(
       bookmark.progressId,
     );
-    await bookmark.destroy();
     return bookmark;
   }
 
@@ -128,10 +128,7 @@ export class BookmarkService {
 
   private validateBookmark(bookmark: Bookmark, reverse: boolean = false) {
     if (reverse ? bookmark : !bookmark) {
-      throw new HttpException(
-        'Such bookmark does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new NotFoundException('Such bookmark does not exist');
     }
   }
 }

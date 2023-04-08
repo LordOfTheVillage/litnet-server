@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Book } from 'src/books/books.model';
 import { Page } from 'src/page/page.model';
 import { PageService } from 'src/page/page.service';
 import { PaginationQueryParams } from 'src/types/types';
@@ -11,8 +10,8 @@ import { PatchChapterDto } from './dto/patch-chapter.dto';
 @Injectable()
 export class ChapterService {
   private static readonly PAGE_SIZE = 1000;
-  private static readonly DEFAULT_LIMIT = 10;
-  private static readonly DEFAULT_OFFSET = 0;
+  private static readonly DEFAULT_LIMIT = undefined;
+  private static readonly DEFAULT_OFFSET = undefined;
   constructor(
     @InjectModel(Chapter) private chapterRepository: typeof Chapter,
     private pageService: PageService,
@@ -40,6 +39,7 @@ export class ChapterService {
       distinct: true,
       limit,
       offset,
+      include: { model: Page },
     });
     return chapters;
   }

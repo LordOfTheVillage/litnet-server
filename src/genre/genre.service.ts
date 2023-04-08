@@ -21,7 +21,7 @@ export class GenreService {
     const genre = await this.genreRepository.findByPk(id, {
       include: { all: true },
     });
-    console.log(genre)
+    console.log(genre);
     this.validateGenre(genre);
     return genre;
   }

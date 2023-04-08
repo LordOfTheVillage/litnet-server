@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PaginationQueryParams } from 'src/types/types';
 import { CreateRatingDto } from './dto/create-rating.dto';
@@ -14,12 +19,16 @@ export class RatingService {
 
   async createRating(dto: CreateRatingDto) {
     // TODO user and book validation
-    const ratingById = await this.getRatingByIds(dto.userId, dto.bookId);
+    const ratingById = await await this.ratingRepository.findOne({
+      where: { userId: dto.userId, bookId: dto.bookId },
+    });
     if (ratingById) {
-      throw new HttpException('Such rating exists', HttpStatus.BAD_REQUEST);
+      // throw new HttpException('Such rating exists', HttpStatus.BAD_REQUEST);
+      await this.updateRating({ ...dto }, ratingById.id);
+    } else {
+      const rating = await this.ratingRepository.create(dto);
+      return rating;
     }
-    const rating = await this.ratingRepository.create(dto);
-    return rating;
   }
 
   async getAllRatings({
@@ -70,6 +79,7 @@ export class RatingService {
     const rating = await this.ratingRepository.findOne({
       where: { userId, bookId },
     });
+    if (!rating) throw new NotFoundException('Such rating does not exists');
     return rating;
   }
 
@@ -95,7 +105,7 @@ export class RatingService {
 
   private validateRating(rating: Rating) {
     if (!rating) {
-      throw new HttpException('Rating not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Rating not found');
     }
   }
 }
