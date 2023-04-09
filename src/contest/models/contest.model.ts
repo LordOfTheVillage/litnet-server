@@ -5,6 +5,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -14,6 +15,7 @@ import { User } from 'src/users/user.model';
 import { ContestGenre } from './contest-genre.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
+import { ContestWinner } from 'src/contest-winner/contest-winner.model';
 
 interface ContestCreationAttrs {
   title: string;
@@ -71,4 +73,7 @@ export class Contest extends Model<Contest, ContestCreationAttrs> {
 
   @HasMany(() => ContestModeration)
   contestModerations: ContestModeration[];
+
+  @HasOne(() => ContestWinner)
+  contestWinner: ContestWinner;
 }

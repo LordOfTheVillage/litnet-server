@@ -12,6 +12,7 @@ import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { Comment } from 'src/comment/comment.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
+import { ContestWinner } from 'src/contest-winner/contest-winner.model';
 import { BookGenre } from 'src/genre/book-genre.model';
 import { Genre } from 'src/genre/genre.model';
 import { Rating } from 'src/rating/rating.model';
@@ -77,6 +78,9 @@ export class Book extends Model<Book, BookCreationAttrs> {
 
   @HasMany(() => Bookmark)
   bookmarks: Bookmark[];
+
+  @HasMany(() => ContestWinner)
+  contestWinner: ContestWinner;
 
   @BelongsTo(() => User)
   user: User;
