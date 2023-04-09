@@ -13,6 +13,7 @@ import { Genre } from 'src/genre/genre.model';
 import { User } from 'src/users/user.model';
 import { ContestGenre } from './contest-genre.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
+import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 
 interface ContestCreationAttrs {
   title: string;
@@ -67,4 +68,7 @@ export class Contest extends Model<Contest, ContestCreationAttrs> {
 
   @BelongsTo(() => User)
   user: User;
+
+  @HasMany(() => ContestModeration)
+  contestModerations: ContestModeration[];
 }

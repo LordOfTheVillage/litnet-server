@@ -12,6 +12,7 @@ import { ContestService } from './contest.service';
 import { ContestGenre } from './models/contest-genre.model';
 import { Contest } from './models/contest.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
+import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 
 @Module({
   controllers: [ContestController],
@@ -25,6 +26,7 @@ import { ContestApplication } from 'src/contest-application/contest-application.
       ContestGenre,
       ContestComment,
       ContestApplication,
+      ContestModeration,
     ]),
     FileModule,
     BooksModule,

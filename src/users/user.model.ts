@@ -14,6 +14,7 @@ import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
 import { Comment } from 'src/comment/comment.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
+import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 import { Contest } from 'src/contest/models/contest.model';
 import { Rating } from 'src/rating/rating.model';
 import { Role } from 'src/role/role.model';
@@ -94,4 +95,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => ContestComment)
   contestComments: ContestComment[];
+
+  @HasMany(() => ContestModeration)
+  contestModerations: ContestModeration[];
 }

@@ -14,15 +14,26 @@ import { RoleModule } from 'src/role/role.module';
 import { User } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, Book, Rating, Bookmark, Blog, BlogComment, ContestComment, Role]),
+    SequelizeModule.forFeature([
+      User,
+      Book,
+      Rating,
+      Bookmark,
+      Blog,
+      BlogComment,
+      ContestComment,
+      Role,
+      ContestModeration,
+    ]),
     forwardRef(() => AuthModule),
     FileModule,
-    RoleModule
+    RoleModule,
   ],
   exports: [UsersService],
 })
