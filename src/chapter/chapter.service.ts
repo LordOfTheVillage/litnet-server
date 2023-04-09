@@ -90,6 +90,14 @@ export class ChapterService {
     return chapter;
   }
 
+  async getSymbols(id: number) {
+    const chapter = await this.chapterRepository.findOne({
+      where: { id },
+      include: { all: true },
+    });
+    return chapter.pages.reduce((acc, page) => (acc += page.text.length), 0);
+  }
+
   private validateChapter(chapter: Chapter) {
     if (!chapter) {
       throw new HttpException(

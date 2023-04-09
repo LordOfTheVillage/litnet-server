@@ -1,18 +1,23 @@
 import {
   ConflictException,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateContestApplicationDto } from './dto/create-contest-application.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ContestApplication } from './contest-application.model';
 import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
+import { ContestService } from 'src/contest/contest.service';
+import { BooksService } from 'src/books/books.service';
 
 @Injectable()
 export class ContestApplicationService {
   constructor(
     @InjectModel(ContestApplication)
     private contestApplicationRepository: typeof ContestApplication,
+    private contestService: ContestService,
+    private bookService: BooksService,
   ) {}
 
   async createApplication(dto: CreateContestApplicationDto) {
@@ -20,6 +25,8 @@ export class ContestApplicationService {
       where: { contestId: dto.contestId, bookId: dto.bookId },
     });
     this.checkExisting(suspect);
+
+    await this.checkContestRequire(dto);
 
     return await this.contestApplicationRepository.create(dto);
   }
@@ -53,6 +60,15 @@ export class ContestApplicationService {
 
   async getAllApplications() {
     return await this.contestApplicationRepository.findAndCountAll();
+  }
+
+  async checkContestRequire(dto: CreateContestApplicationDto) {
+    const contest = await this.contestService.getContestById(dto.contestId);
+    const bookSymbols = await this.bookService.getBookSymbols(dto.bookId);
+
+    if (contest.countCharacters && bookSymbols < contest.countCharacters) {
+      throw new NotAcceptableException("Book doesn't have enough characters");
+    }
   }
 
   checkNotFound(suspect: ContestApplication) {

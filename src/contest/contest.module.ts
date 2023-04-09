@@ -29,7 +29,6 @@ import { ContestModeration } from 'src/contest-moderation/contest-moderation.mod
       ContestModeration,
     ]),
     FileModule,
-    BooksModule,
     GenreModule,
   ],
   exports: [ContestService],

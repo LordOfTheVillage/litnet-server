@@ -19,7 +19,6 @@ export class ContestService {
     @InjectModel(Contest) private contestRepository: typeof Contest,
     private fileService: FileService,
     private genreService: GenreService,
-    private bookService: BooksService,
   ) {}
 
   async createContest({ genres, ...dto }: CreateContestDto, img?: any) {

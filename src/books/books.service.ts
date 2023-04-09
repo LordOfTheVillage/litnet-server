@@ -193,6 +193,18 @@ export class BooksService {
     return book;
   }
 
+  async getBookSymbols(id: number) {
+    const book = await this.getBookById(id);
+    const chapters = book.chapters || [];
+    let count = 0;
+
+    chapters.forEach(async (ch) => {
+      count += await this.chapterService.getSymbols(ch.id);
+    });
+
+    return count;
+  }
+
   async deleteBook(id: number) {
     const book = await this.bookRepository.findOne({
       where: { id },
