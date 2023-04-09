@@ -10,8 +10,8 @@ import { Book } from 'src/books/books.model';
 import { Contest } from 'src/contest/models/contest.model';
 
 interface ContestApplicationCreationAttrs {
-  text: string;
-  userId: number;
+  status: boolean;
+  bookId: number;
   contestId: number;
 }
 
@@ -29,7 +29,7 @@ export class ContestApplication extends Model<
   id: number;
 
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
-  status: string;
+  status: boolean;
 
   @ForeignKey(() => Contest)
   @Column({ type: DataType.INTEGER, allowNull: false })

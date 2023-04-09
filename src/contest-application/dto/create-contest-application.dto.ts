@@ -6,8 +6,4 @@ export class CreateContestApplicationDto {
 
   @IsInt({ message: 'Must be a number' })
   readonly bookId: number;
-
-  @IsOptional()
-  @IsBoolean({ message: 'Must be a boolean' })
-  readonly status: boolean;
 }
