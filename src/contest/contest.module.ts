@@ -13,11 +13,13 @@ import { ContestGenre } from './models/contest-genre.model';
 import { Contest } from './models/contest.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   controllers: [ContestController],
   providers: [ContestService],
   imports: [
+    ScheduleModule.forRoot(),
     SequelizeModule.forFeature([
       Genre,
       Book,

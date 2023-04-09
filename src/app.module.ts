@@ -25,7 +25,6 @@ import { BookmarkModule } from './bookmark/bookmark.module';
 import { Bookmark } from './bookmark/bookmark.model';
 import { ContestModule } from './contest/contest.module';
 import { Contest } from './contest/models/contest.model';
-import { ContestBook } from './contest/models/contest-book.model';
 import { ContestGenre } from './contest/models/contest-genre.model';
 import { BlogModule } from './blog/blog.module';
 import { BlogCommentModule } from './blog-comment/blog-comment.module';
@@ -35,6 +34,12 @@ import { ContestCommentModule } from './contest-comment/contest-comment.module';
 import { ContestComment } from './contest-comment/contest-comment.model';
 import { RoleModule } from './role/role.module';
 import { Role } from './role/role.model';
+import { ContestApplicationModule } from './contest-application/contest-application.module';
+import { ContestApplication } from './contest-application/contest-application.model';
+import { ContestModerationModule } from './contest-moderation/contest-moderation.module';
+import { ContestModeration } from './contest-moderation/contest-moderation.model';
+import { ContestWinnerModule } from './contest-winner/contest-winner.module';
+import { ContestWinner } from './contest-winner/contest-winner.model';
 
 @Module({
   imports: [
@@ -63,12 +68,14 @@ import { Role } from './role/role.model';
         ReadingProgress,
         Bookmark,
         Contest,
-        ContestBook,
         ContestGenre,
         Blog,
         BlogComment,
         ContestComment,
         Role,
+        ContestApplication,
+        ContestModeration,
+        ContestWinner,
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -89,6 +96,9 @@ import { Role } from './role/role.model';
     BlogCommentModule,
     ContestCommentModule,
     RoleModule,
+    ContestApplicationModule,
+    ContestModerationModule,
+    ContestWinnerModule,
   ],
 })
 export class AppModule {}

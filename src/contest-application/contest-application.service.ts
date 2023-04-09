@@ -78,4 +78,6 @@ export class ContestApplicationService {
   checkExisting(suspect: ContestApplication) {
     if (suspect) throw new ConflictException('Such application already exists');
   }
+
+  
 }

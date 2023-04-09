@@ -10,6 +10,7 @@ import { User } from 'src/users/user.model';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
 import { Contest } from './models/contest.model';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class ContestService {
@@ -86,7 +87,7 @@ export class ContestService {
   }
 
   async updateContest({ genres, ...dto }: PatchContestDto, id: number, img?) {
-    const contest = await this.contestRepository.findOne({ where: { id } });
+    const contest = await this.contestRepository.findByPk(id);
     this.validateContest(contest);
     const parsedDto = await this.parseDto(dto);
 
@@ -103,8 +104,27 @@ export class ContestService {
     return contest;
   }
 
+  async updateStatus(id: number, value: boolean) {
+    const contest = await this.contestRepository.findByPk(id);
+    this.validateContest(contest);
+
+    return await contest.update({ ...contest, status: value });
+  }
+
+  @Cron('0 0 * * *')
+  async updateContestStatus() {
+    const currentDate = new Date();
+    const contests = await this.getAllContests({});
+
+    for (const contest of contests.rows) {
+      if (currentDate >= new Date(contest.date)) {
+        await this.updateStatus(contest.id, true);
+      }
+    }
+  }
+
   async deleteContest(id: number) {
-    const contest = await this.contestRepository.findOne({ where: { id } });
+    const contest = await this.contestRepository.findByPk(id);
     this.validateContest(contest);
     await contest.destroy();
     return contest;

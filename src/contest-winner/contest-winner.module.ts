@@ -9,7 +9,9 @@ import { ContestWinner } from './contest-winner.model';
 @Module({
   providers: [ContestWinnerService],
   controllers: [ContestWinnerController],
-  imports: [SequelizeModule.forFeature([ContestWinner, Book, Contest])],
+  imports: [
+    SequelizeModule.forFeature([ContestWinner, Book, Contest]),
+  ],
   exports: [ContestWinnerService],
 })
 export class ContestWinnerModule {}

@@ -52,6 +52,9 @@ export class Contest extends Model<Contest, ContestCreationAttrs> {
   @Column({ type: DataType.DATEONLY, allowNull: false })
   date: string;
 
+  @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
+  status: boolean;
+
   @Column({ type: DataType.INTEGER, allowNull: false })
   countCharacters: number;
 
