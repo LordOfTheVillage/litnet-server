@@ -9,9 +9,9 @@ import { GenreModule } from 'src/genre/genre.module';
 import { User } from 'src/users/user.model';
 import { ContestController } from './contest.controller';
 import { ContestService } from './contest.service';
-import { ContestBook } from './models/contest-book.model';
 import { ContestGenre } from './models/contest-genre.model';
 import { Contest } from './models/contest.model';
+import { ContestApplication } from 'src/contest-application/contest-application.model';
 
 @Module({
   controllers: [ContestController],
@@ -23,8 +23,8 @@ import { Contest } from './models/contest.model';
       User,
       Contest,
       ContestGenre,
-      ContestBook,
       ContestComment,
+      ContestApplication,
     ]),
     FileModule,
     BooksModule,

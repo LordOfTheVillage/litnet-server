@@ -30,22 +30,6 @@ export class ContestController {
     return this.contestService.createContest(contestDto, img);
   }
 
-  @Post('/:contestId/addBook/:bookId')
-  addBook(
-    @Param('contestId', ParseIntPipe) contestId: number,
-    @Param('bookId', ParseIntPipe) bookId: number,
-  ) {
-    return this.contestService.addBook(contestId, bookId);
-  }
-
-  @Delete('/:contestId/removeBook/:bookId')
-  removeBook(
-    @Param('contestId', ParseIntPipe) contestId: number,
-    @Param('bookId', ParseIntPipe) bookId: number,
-  ) {
-    return this.contestService.removeBook(contestId, bookId);
-  }
-
   @Get('/:id')
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.contestService.getContestById(id);

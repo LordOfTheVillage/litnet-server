@@ -8,12 +8,11 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Book } from 'src/books/books.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { Genre } from 'src/genre/genre.model';
 import { User } from 'src/users/user.model';
-import { ContestBook } from './contest-book.model';
 import { ContestGenre } from './contest-genre.model';
+import { ContestApplication } from 'src/contest-application/contest-application.model';
 
 interface ContestCreationAttrs {
   title: string;
@@ -60,11 +59,11 @@ export class Contest extends Model<Contest, ContestCreationAttrs> {
   @BelongsToMany(() => Genre, () => ContestGenre)
   genres: Genre[];
 
-  @BelongsToMany(() => Book, () => ContestBook)
-  books: Book[];
-
   @HasMany(() => ContestComment)
   contestComments: ContestComment[];
+
+  @HasMany(() => ContestApplication)
+  contestApplications: ContestApplication[];
 
   @BelongsTo(() => User)
   user: User;

@@ -104,28 +104,6 @@ export class ContestService {
     return contest;
   }
 
-  async addBook(id: number, bookId: number) {
-    const { contest, contestBooks, book } = await this.getBooks(id, bookId);
-    const newBooks = [...contestBooks, book];
-    await contest.$add('books', newBooks);
-    return contest;
-  }
-
-  async removeBook(id: number, bookId: number) {
-    const { contest, contestBooks, book } = await this.getBooks(id, bookId);
-    const newBooks = contestBooks.filter((b) => b.id !== book.id);
-    await contest.$set('books', newBooks);
-    return contest;
-  }
-
-  private async getBooks(id: number, bookId: number) {
-    const contest = await this.contestRepository.findOne({ where: { id } });
-    this.validateContest(contest);
-    const contestBooks = await contest.$get('books');
-    const book = await this.bookService.getBookById(bookId);
-    return { contest, contestBooks, book };
-  }
-
   async deleteContest(id: number) {
     const contest = await this.contestRepository.findOne({ where: { id } });
     this.validateContest(contest);
