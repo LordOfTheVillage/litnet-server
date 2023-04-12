@@ -58,6 +58,18 @@ export class ContestApplicationService {
     });
   }
 
+  async getRealApplicationsByContestId(id: number) {
+    return await this.contestApplicationRepository.findAndCountAll({
+      where: { contestId: id, status: true },
+    });
+  }
+
+  async getUnrealApplicationsByContestId(id: number) {
+    return await this.contestApplicationRepository.findAndCountAll({
+      where: { contestId: id, status: false },
+    });
+  }
+
   async getAllApplications() {
     return await this.contestApplicationRepository.findAndCountAll();
   }
@@ -78,6 +90,4 @@ export class ContestApplicationService {
   checkExisting(suspect: ContestApplication) {
     if (suspect) throw new ConflictException('Such application already exists');
   }
-
-  
 }

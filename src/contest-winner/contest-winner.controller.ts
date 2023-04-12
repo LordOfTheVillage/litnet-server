@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ContestWinnerService } from './contest-winner.service';
 import { CreateContestWinnerDto } from './dto/create-contest-winner.dto';
 
@@ -12,7 +12,7 @@ export class ContestWinnerController {
   }
 
   @Post()
-  create(dto: CreateContestWinnerDto) {
+  create(@Body() dto: CreateContestWinnerDto) {
     return this.contestWinnerService.createWinner(dto);
   }
 }

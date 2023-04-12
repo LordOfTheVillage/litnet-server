@@ -49,7 +49,6 @@ export class ContestService {
     offset = ContestService.DEFAULT_OFFSET,
   }: PaginationQueryParams) {
     const contests = await this.contestRepository.findAndCountAll({
-      include: { model: Book, attributes: ['id'] },
       distinct: true,
       limit: limit || undefined,
       offset: offset || undefined,
@@ -66,7 +65,6 @@ export class ContestService {
   ) {
     const contests = await this.contestRepository.findAndCountAll({
       where: { userId: id },
-      include: { model: Book, attributes: ['id'] },
       distinct: true,
       limit: limit || undefined,
       offset: offset || undefined,
@@ -78,7 +76,6 @@ export class ContestService {
     const contest = await this.contestRepository.findOne({
       where: { id },
       include: [
-        { model: Book, attributes: ['id'] },
         { model: User, attributes: ['id', 'name'] },
       ],
     });

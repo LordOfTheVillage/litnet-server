@@ -45,6 +45,15 @@ export class ContestModerationService {
     return moderations;
   }
 
+  async getByUserAndContestId(userId: number, contestId: number) {
+    const moderation = await this.contestModerationRepository.findOne({
+      where: { userId, contestId },
+    });
+    this.checkNotFound(moderation);
+
+    return moderation;
+  }
+
   async getAllModerators() {
     return await this.contestModerationRepository.findAndCountAll();
   }

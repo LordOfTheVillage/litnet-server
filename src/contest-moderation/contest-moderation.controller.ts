@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -14,7 +15,7 @@ export class ContestModerationController {
   constructor(private contestModeration: ContestModerationService) {}
 
   @Post()
-  create(dto: CreateContestModerationDto) {
+  create(@Body() dto: CreateContestModerationDto) {
     return this.contestModeration.createModeration(dto);
   }
 
@@ -32,7 +33,6 @@ export class ContestModerationController {
   getByUserId(@Param('userId', ParseIntPipe) id: number) {
     return this.contestModeration.getByUserId(id);
   }
-
 
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {

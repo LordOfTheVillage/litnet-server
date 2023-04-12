@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ContestApplicationService } from './contest-application.service';
 import { CreateContestApplicationDto } from './dto/create-contest-application.dto';
 import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
+import { ModerationGuard } from 'src/contest-moderation/moderation.guard';
 
 @Controller('contest-application')
 export class ContestApplicationController {
@@ -21,6 +23,7 @@ export class ContestApplicationController {
     return this.contestApplicationService.createApplication(dto);
   }
 
+  @UseGuards(ModerationGuard)
   @Patch('/:id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -29,6 +32,7 @@ export class ContestApplicationController {
     return this.contestApplicationService.updateApplication(id, dto);
   }
 
+  @UseGuards(ModerationGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.contestApplicationService.deleteApplication(id);
@@ -42,6 +46,16 @@ export class ContestApplicationController {
   @Get('/contest/:contestId')
   getByContestId(@Param('contestId', ParseIntPipe) id: number) {
     return this.contestApplicationService.getApplicationsByContestId(id);
+  }
+
+  @Get('/contest/:contestId/verified')
+  getRealByContestId(@Param('contestId', ParseIntPipe) id: number) {
+    return this.contestApplicationService.getRealApplicationsByContestId(id);
+  }
+
+  @Get('/contest/:contestId/unverified')
+  getUnrealByContestId(@Param('contestId', ParseIntPipe) id: number) {
+    return this.contestApplicationService.getUnrealApplicationsByContestId(id);
   }
 
   @Get()

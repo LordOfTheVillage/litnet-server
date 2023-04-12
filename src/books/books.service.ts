@@ -196,13 +196,13 @@ export class BooksService {
   async getBookSymbols(id: number) {
     const book = await this.getBookById(id);
     const chapters = book.chapters || [];
-    let count = 0;
+    const symbols = chapters.map(
+      async (c) => await this.chapterService.getSymbols(c.id),
+    );
 
-    chapters.forEach(async (ch) => {
-      count += await this.chapterService.getSymbols(ch.id);
-    });
-
-    return count;
+    return await Promise.all(symbols).then((s) =>
+      s.reduce((acc, e) => (acc += e), 0),
+    );
   }
 
   async deleteBook(id: number) {
