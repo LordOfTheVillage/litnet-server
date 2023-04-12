@@ -7,12 +7,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ContestApplicationService } from './contest-application.service';
 import { CreateContestApplicationDto } from './dto/create-contest-application.dto';
 import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
 import { ModerationGuard } from 'src/contest-moderation/moderation.guard';
+import { PaginationQueryParams } from 'src/types/types';
 
 @Controller('contest-application')
 export class ContestApplicationController {
@@ -44,22 +46,37 @@ export class ContestApplicationController {
   }
 
   @Get('/contest/:contestId')
-  getByContestId(@Param('contestId', ParseIntPipe) id: number) {
-    return this.contestApplicationService.getApplicationsByContestId(id);
+  getByContestId(
+    @Param('contestId', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.contestApplicationService.getApplicationsByContestId(id, query);
   }
 
   @Get('/contest/:contestId/verified')
-  getRealByContestId(@Param('contestId', ParseIntPipe) id: number) {
-    return this.contestApplicationService.getRealApplicationsByContestId(id);
+  getRealByContestId(
+    @Param('contestId', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.contestApplicationService.getRealApplicationsByContestId(
+      id,
+      query,
+    );
   }
 
   @Get('/contest/:contestId/unverified')
-  getUnrealByContestId(@Param('contestId', ParseIntPipe) id: number) {
-    return this.contestApplicationService.getUnrealApplicationsByContestId(id);
+  getUnrealByContestId(
+    @Param('contestId', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.contestApplicationService.getUnrealApplicationsByContestId(
+      id,
+      query,
+    );
   }
 
   @Get()
-  getAll() {
-    return this.contestApplicationService.getAllApplications();
+  getAll(@Query() query: PaginationQueryParams) {
+    return this.contestApplicationService.getAllApplications(query);
   }
 }

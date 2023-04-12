@@ -6,9 +6,12 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { ContestModeration } from './contest-moderation.model';
 import { CreateContestModerationDto } from './dto/create-moderation.dto';
+import { PaginationQueryParams } from 'src/types/types';
 
 @Injectable()
 export class ContestModerationService {
+  private static readonly DEFAULT_LIMIT = undefined;
+  private static readonly DEFAULT_OFFSET = undefined;
   constructor(
     @InjectModel(ContestModeration)
     private contestModerationRepository: typeof ContestModeration,
@@ -29,17 +32,35 @@ export class ContestModerationService {
     return await moderation.destroy();
   }
 
-  async getByContestId(id: number) {
+  async getByContestId(
+    id: number,
+    {
+      limit = ContestModerationService.DEFAULT_LIMIT,
+      offset = ContestModerationService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const moderations = await this.contestModerationRepository.findAndCountAll({
       where: { contestId: id },
+      distinct: true,
+      limit,
+      offset,
     });
 
     return moderations;
   }
 
-  async getByUserId(id: number) {
+  async getByUserId(
+    id: number,
+    {
+      limit = ContestModerationService.DEFAULT_LIMIT,
+      offset = ContestModerationService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     const moderations = await this.contestModerationRepository.findAndCountAll({
       where: { userId: id },
+      distinct: true,
+      limit,
+      offset,
     });
 
     return moderations;
@@ -54,8 +75,15 @@ export class ContestModerationService {
     return moderation;
   }
 
-  async getAllModerators() {
-    return await this.contestModerationRepository.findAndCountAll();
+  async getAllModerators({
+    limit = ContestModerationService.DEFAULT_LIMIT,
+    offset = ContestModerationService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
+    return await this.contestModerationRepository.findAndCountAll({
+      distinct: true,
+      limit,
+      offset,
+    });
   }
 
   checkNotFound(suspect: ContestModeration) {

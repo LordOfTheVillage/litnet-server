@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -16,6 +17,7 @@ import { PaginationQueryParams } from 'src/types/types';
 import { ContestService } from './contest.service';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
+import { ContestOwnerGuard } from './contest-owner.guard';
 
 @Controller('contest')
 export class ContestController {
@@ -58,6 +60,7 @@ export class ContestController {
     return this.contestService.updateContest(contestDto, id, img);
   }
 
+  @UseGuards(ContestOwnerGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.contestService.deleteContest(id);

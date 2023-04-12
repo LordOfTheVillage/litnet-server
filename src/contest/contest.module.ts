@@ -14,12 +14,17 @@ import { Contest } from './models/contest.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 import { ScheduleModule } from '@nestjs/schedule';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [ContestController],
   providers: [ContestService],
   imports: [
     ScheduleModule.forRoot(),
+    JwtModule.register({
+      secret: process.env.SECRET_KEY || 'secretKey',
+      signOptions: { expiresIn: '24h' },
+    }),
     SequelizeModule.forFeature([
       Genre,
       Book,

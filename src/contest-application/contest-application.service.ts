@@ -10,9 +10,12 @@ import { ContestApplication } from './contest-application.model';
 import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
 import { ContestService } from 'src/contest/contest.service';
 import { BooksService } from 'src/books/books.service';
+import { PaginationQueryParams } from 'src/types/types';
 
 @Injectable()
 export class ContestApplicationService {
+  private static readonly DEFAULT_LIMIT = undefined;
+  private static readonly DEFAULT_OFFSET = undefined;
   constructor(
     @InjectModel(ContestApplication)
     private contestApplicationRepository: typeof ContestApplication,
@@ -52,26 +55,60 @@ export class ContestApplicationService {
     return application;
   }
 
-  async getApplicationsByContestId(id: number) {
+  async getApplicationsByContestId(
+    id: number,
+    {
+      limit = ContestApplicationService.DEFAULT_LIMIT,
+      offset = ContestApplicationService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     return await this.contestApplicationRepository.findAndCountAll({
       where: { contestId: id },
+      distinct: true,
+      limit,
+      offset,
     });
   }
 
-  async getRealApplicationsByContestId(id: number) {
+  async getRealApplicationsByContestId(
+    id: number,
+    {
+      limit = ContestApplicationService.DEFAULT_LIMIT,
+      offset = ContestApplicationService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     return await this.contestApplicationRepository.findAndCountAll({
       where: { contestId: id, status: true },
+      distinct: true,
+      limit,
+      offset,
     });
   }
 
-  async getUnrealApplicationsByContestId(id: number) {
+  async getUnrealApplicationsByContestId(
+    id: number,
+    {
+      limit = ContestApplicationService.DEFAULT_LIMIT,
+      offset = ContestApplicationService.DEFAULT_OFFSET,
+    }: PaginationQueryParams,
+  ) {
     return await this.contestApplicationRepository.findAndCountAll({
       where: { contestId: id, status: false },
+      distinct: true,
+      limit,
+      offset,
     });
   }
 
-  async getAllApplications() {
-    return await this.contestApplicationRepository.findAndCountAll();
+  async getAllApplications({
+    limit = ContestApplicationService.DEFAULT_LIMIT,
+    offset = ContestApplicationService.DEFAULT_OFFSET,
+  }: PaginationQueryParams) {
+    return await this.contestApplicationRepository.findAndCountAll({
+      distinct: true,
+      limit,
+      offset,
+    });
   }
 
   async checkContestRequire(dto: CreateContestApplicationDto) {
