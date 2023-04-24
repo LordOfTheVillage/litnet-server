@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { RoleGuard } from 'src/auth/role.guard';
+import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { PaginationQueryParams } from 'src/types/types';
 import { AddRoleDto } from './dto/add-role.dto';

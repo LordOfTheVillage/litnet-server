@@ -5,11 +5,15 @@ import { User } from 'src/users/user.model';
 import { ContestCommentController } from './contest-comment.controller';
 import { ContestComment } from './contest-comment.model';
 import { ContestCommentService } from './contest-comment.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [ContestCommentController],
   providers: [ContestCommentService],
-  imports: [SequelizeModule.forFeature([User, Contest, ContestComment])],
+  imports: [
+    SequelizeModule.forFeature([User, Contest, ContestComment]),
+    AuthModule,
+  ],
   exports: [ContestCommentService],
 })
 export class ContestCommentModule {}

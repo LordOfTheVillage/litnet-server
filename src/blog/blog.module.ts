@@ -5,11 +5,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Blog } from './blog.model';
 import { User } from 'src/users/user.model';
 import { BlogComment } from 'src/blog-comment/blog-comment.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [BlogService],
   controllers: [BlogController],
-  imports: [SequelizeModule.forFeature([Blog, User, BlogComment])],
+  imports: [SequelizeModule.forFeature([Blog, User, BlogComment]), AuthModule],
   exports: [BlogService],
 })
 export class BlogModule {}

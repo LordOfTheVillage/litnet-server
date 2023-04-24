@@ -8,7 +8,7 @@ import { ContestApplication } from './contest-application.model';
 import { ContestModule } from 'src/contest/contest.module';
 import { BooksModule } from 'src/books/books.module';
 import { ContestModerationModule } from 'src/contest-moderation/contest-moderation.module';
-import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [ContestApplicationController],
@@ -18,10 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     ContestModule,
     BooksModule,
     ContestModerationModule,
-    JwtModule.register({
-      secret: process.env.SECRET_KEY || 'secretKey',
-      signOptions: { expiresIn: '24h' },
-    }),
+    AuthModule
   ],
   exports: [ContestApplicationService],
 })

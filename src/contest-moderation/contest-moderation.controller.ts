@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ContestModerationService } from './contest-moderation.service';
 import { CreateContestModerationDto } from './dto/create-moderation.dto';
-import { ContestOwnerGuard } from 'src/contest/contest-owner.guard';
+import { ContestOwnerGuard } from 'src/guards/contest-owner.guard';
 import { PaginationQueryParams } from 'src/types/types';
 
 @Controller('contest-moderation')

@@ -6,17 +6,14 @@ import { Contest } from 'src/contest/models/contest.model';
 import { Book } from 'src/books/books.model';
 import { ContestWinner } from './contest-winner.model';
 import { ContestModule } from 'src/contest/contest.module';
-import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [ContestWinnerService],
   controllers: [ContestWinnerController],
   imports: [
     SequelizeModule.forFeature([ContestWinner, Book, Contest]),
-    JwtModule.register({
-      secret: process.env.SECRET_KEY || 'secretKey',
-      signOptions: { expiresIn: '24h' },
-    }),
+    AuthModule,
     ContestModule,
   ],
   exports: [ContestWinnerService],

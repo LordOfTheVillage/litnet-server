@@ -8,7 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import { ROLES_KEY } from './roles.decorator';
+import { ROLES_KEY } from '../auth/roles.decorator';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -37,6 +37,10 @@ export class RoleGuard implements CanActivate {
       }
 
       const user = this.jwtService.verify(token);
+      if (user.banned) {
+        throw new NotAcceptableException('User was banned');
+      }
+
       req.user = user;
       return requiredRole.includes(user.role.value);
     } catch (e) {

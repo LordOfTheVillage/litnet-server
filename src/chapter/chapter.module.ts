@@ -7,11 +7,16 @@ import { Book } from 'src/books/books.model';
 import { Page } from 'src/page/page.model';
 import { PageModule } from 'src/page/page.module';
 import { ReadingProgress } from 'src/reading-progress/reading-progress.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [ChapterService],
   controllers: [ChapterController],
-  imports: [SequelizeModule.forFeature([Chapter, Book, Page, ReadingProgress]), PageModule],
+  imports: [
+    SequelizeModule.forFeature([Chapter, Book, Page, ReadingProgress]),
+    PageModule,
+    AuthModule,
+  ],
   exports: [ChapterService],
 })
 export class ChapterModule {}

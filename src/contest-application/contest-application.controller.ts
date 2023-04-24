@@ -13,7 +13,7 @@ import {
 import { ContestApplicationService } from './contest-application.service';
 import { CreateContestApplicationDto } from './dto/create-contest-application.dto';
 import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
-import { ModerationGuard } from 'src/contest-moderation/moderation.guard';
+import { ModerationGuard } from 'src/guards/moderation.guard';
 import { PaginationQueryParams } from 'src/types/types';
 
 @Controller('contest-application')

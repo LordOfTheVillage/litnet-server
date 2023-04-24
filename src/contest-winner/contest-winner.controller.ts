@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ContestWinnerService } from './contest-winner.service';
 import { CreateContestWinnerDto } from './dto/create-contest-winner.dto';
-import { ContestOwnerGuard } from 'src/contest/contest-owner.guard';
+import { ContestOwnerGuard } from 'src/guards/contest-owner.guard';
 
 @Controller('contest-winner')
 export class ContestWinnerController {

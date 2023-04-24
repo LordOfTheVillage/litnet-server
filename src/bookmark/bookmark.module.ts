@@ -7,6 +7,7 @@ import { User } from 'src/users/user.model';
 import { BookmarkController } from './bookmark.controller';
 import { Bookmark } from './bookmark.model';
 import { BookmarkService } from './bookmark.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [BookmarkController],
@@ -14,6 +15,7 @@ import { BookmarkService } from './bookmark.service';
   imports: [
     SequelizeModule.forFeature([Book, ReadingProgress, User, Bookmark]),
     ReadingProgressModule,
+    AuthModule
   ],
   exports: [BookmarkService],
 })

@@ -7,11 +7,15 @@ import { BookGenre } from './book-genre.model';
 import { GenreController } from './genre.controller';
 import { Genre } from './genre.model';
 import { GenreService } from './genre.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [GenreController],
   providers: [GenreService],
-  imports: [SequelizeModule.forFeature([Genre, Book, BookGenre, Contest, ContestGenre])],
+  imports: [
+    SequelizeModule.forFeature([Genre, Book, BookGenre, Contest, ContestGenre]),
+    AuthModule,
+  ],
   exports: [GenreService],
 })
 export class GenreModule {}

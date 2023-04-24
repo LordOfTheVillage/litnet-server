@@ -17,12 +17,16 @@ import { PaginationQueryParams } from 'src/types/types';
 import { ContestService } from './contest.service';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { PatchContestDto } from './dto/patch-contest.dto';
-import { ContestOwnerGuard } from './contest-owner.guard';
+import { ContestOwnerGuard } from '../guards/contest-owner.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('contest')
 export class ContestController {
   constructor(private contestService: ContestService) {}
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Post()
   @UseInterceptors(FileInterceptor('img'))
   create(
@@ -50,6 +54,8 @@ export class ContestController {
     return this.contestService.getAllContests(query);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Patch('/:id')
   @UseInterceptors(FileInterceptor('img'))
   update(

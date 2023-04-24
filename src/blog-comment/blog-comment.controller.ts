@@ -8,16 +8,21 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaginationQueryParams } from 'src/types/types';
 import { BlogCommentService } from './blog-comment.service';
 import { CreateBlogCommentDto } from './dto/create-blog-comment.dto';
 import { PatchBlogCommentDto } from './dto/patch-blog-comment.dto';
+import { RoleGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('blog-comment')
 export class BlogCommentController {
   constructor(private blogCommentService: BlogCommentService) {}
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateBlogCommentDto) {
     return this.blogCommentService.createBlogComment(dto);
@@ -33,6 +38,8 @@ export class BlogCommentController {
     return this.blogCommentService.getAllBlogComments(query);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Patch('/:id')
   update(
     @Param('id', ParseIntPipe) id: number,

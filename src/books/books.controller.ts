@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { RoleGuard } from 'src/auth/role.guard';
+import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { GenreQueryParams, BookQueryParams } from 'src/types/types';
 import { BooksService } from './books.service';
@@ -24,6 +24,8 @@ import { PatchBookDto } from './dto/patch-book.dto';
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Post()
   @UseInterceptors(FileInterceptor('img'))
   create(
@@ -80,6 +82,8 @@ export class BooksController {
     return this.booksService.verifyBook(id);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Patch('/:id')
   @UseInterceptors(FileInterceptor('img'))
   update(
@@ -90,6 +94,8 @@ export class BooksController {
     return this.booksService.updateBook(dto, id, img);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.deleteBook(id);

@@ -8,17 +8,22 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { query } from 'express';
 import { PaginationQueryParams } from 'src/types/types';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PatchCommentDto } from './dto/patch-comment.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('book-comments')
 export class CommentController {
   constructor(private commentService: CommentService) {}
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateCommentDto) {
     return this.commentService.createComment(dto);
@@ -50,11 +55,15 @@ export class CommentController {
     return this.commentService.getCommentById(id);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.commentService.deleteComment(id);
   }
 
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
   @Patch('/:id')
   update(@Body() dto: PatchCommentDto, @Param('id', ParseIntPipe) id: number) {
     return this.commentService.updateComment(dto, id);
