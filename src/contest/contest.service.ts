@@ -76,7 +76,7 @@ export class ContestService {
       },
       limit,
       offset,
-      include: { model: ContestApplication, attributes: ['id'] },
+      // include: { model: ContestApplication, attributes: ['id'] },
     });
     return contests;
   }
