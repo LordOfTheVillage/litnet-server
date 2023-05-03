@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Book } from 'src/books/books.model';
-import { BooksModule } from 'src/books/books.module';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { FileModule } from 'src/file/file.module';
 import { Genre } from 'src/genre/genre.model';
@@ -15,6 +14,10 @@ import { ContestApplication } from 'src/contest-application/contest-application.
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JwtModule } from '@nestjs/jwt';
+import { ContestCommentModule } from 'src/contest-comment/contest-comment.module';
+import { ContestWinnerModule } from 'src/contest-winner/contest-winner.module';
+import { ContestApplicationModule } from 'src/contest-application/contest-application.module';
+import { ContestModerationModule } from 'src/contest-moderation/contest-moderation.module';
 
 @Module({
   controllers: [ContestController],
@@ -37,6 +40,10 @@ import { JwtModule } from '@nestjs/jwt';
     ]),
     FileModule,
     GenreModule,
+    ContestCommentModule,
+    ContestApplicationModule,
+    ContestWinnerModule,
+    ContestModerationModule
   ],
   exports: [ContestService],
 })

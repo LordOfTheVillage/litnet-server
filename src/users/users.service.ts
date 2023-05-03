@@ -15,12 +15,25 @@ import { Contest } from 'src/contest/models/contest.model';
 import { Comment } from 'src/comment/comment.model';
 import { Book } from 'src/books/books.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
-import { PaginationQueryParams } from 'src/types/types';
+import {
+  VerifiedParams,
+  PaginationQueryParams,
+  BookQueryParams,
+} from 'src/types/types';
 import { PatchUserPasswordDto } from './dto/patch-user-password.dto';
 import { RoleService } from 'src/role/role.service';
 import { Role } from 'src/role/role.model';
 import { BanUserDto } from './dto/ban-user.dto';
 import { AddRoleDto } from './dto/add-role.dto';
+import { Op } from 'sequelize';
+import { CommentService } from 'src/comment/comment.service';
+import { BooksService } from 'src/books/books.service';
+import { BookmarkService } from 'src/bookmark/bookmark.service';
+import { BlogCommentService } from 'src/blog-comment/blog-comment.service';
+import { BlogService } from 'src/blog/blog.service';
+import { ContestCommentService } from 'src/contest-comment/contest-comment.service';
+import { ContestService } from 'src/contest/contest.service';
+import { RatingService } from 'src/rating/rating.service';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +44,13 @@ export class UsersService {
     @InjectModel(User) private userRepository: typeof User,
     private fileService: FileService,
     private roleService: RoleService,
+    private bookCommentsService: CommentService,
+    private blogCommentsService: BlogCommentService,
+    private contestCommentsService: ContestCommentService,
+    private bookService: BooksService,
+    private bookmarkService: BookmarkService,
+    private blogService: BlogService,
+    private ratingService: RatingService,
   ) {}
 
   async createUser(dto: CreateUserDto, img?: any) {
@@ -52,12 +72,32 @@ export class UsersService {
   async getAllUsers({
     limit = UsersService.DEFAULT_LIMIT,
     offset = UsersService.DEFAULT_OFFSET,
-  }: PaginationQueryParams) {
+    disabled: banned = false,
+    search: name = '',
+    role = 'all',
+  }: VerifiedParams) {
+    let roles = await this.roleService.getAllRoles();
+    if (role !== 'all') roles = roles.filter((r) => r.value === role);
+    const range = roles.map((r) => r.id);
+    console.log(roles);
     const users = await this.userRepository.findAndCountAll({
       distinct: true,
+      where: {
+        banned,
+        roleId: {
+          [Op.in]: range,
+        },
+        name: {
+          [Op.iLike]: `%${name}%`,
+        },
+      },
       limit,
       offset,
-      include: { model: Role, attributes: ['value'] },
+      attributes: { exclude: ['password'] },
+      include: {
+        model: Role,
+        attributes: ['value'],
+      },
     });
     return users;
   }
@@ -71,6 +111,7 @@ export class UsersService {
         { model: Bookmark },
         { model: Role, attributes: ['value'] },
       ],
+      attributes: { exclude: ['password'] },
     });
     return user;
   }
@@ -82,6 +123,40 @@ export class UsersService {
   async getAvatar(id: number) {
     const user = await this.userRepository.findByPk(id);
     return user.img;
+  }
+
+  async getLibraryBooks(id: number, params: BookQueryParams) {
+    const user = await this.getUserById(id);
+    if (!user) throw new NotFoundException('User with this id not found');
+    return await this.bookService.getLibraryBooks(user, params);
+  }
+
+  async getBooksByUserId(id: number, params: BookQueryParams) {
+    return await this.bookService.getBooksByUserId(id, params);
+  }
+
+  async getBookmarksByUserId(id: number, params: BookQueryParams) {
+    return await this.bookmarkService.getByUserId(id, params);
+  }
+
+  async getBlogsByUserId(id: number, params: BookQueryParams) {
+    return await this.blogService.getBlogsByUserId(id, params);
+  }
+
+  async getRatingsByUserId(id: number, params: BookQueryParams) {
+    return await this.ratingService.getRatingsByUserId(id, params);
+  }
+
+  async getBlogCommentsByUserId(id: number, params: BookQueryParams) {
+    return await this.blogCommentsService.getBlogCommentsByUserId(id, params);
+  }
+
+  async getContestCommentsByUserId(id: number, params: BookQueryParams) {
+    return await this.contestCommentsService.getCommentsByUserId(id, params);
+  }
+
+  async getBookCommentsByUserId(id: number, params: PaginationQueryParams) {
+    return await this.bookCommentsService.getCommentsByUserId(id, params);
   }
 
   async updateAvatar(id: number, img: any) {
@@ -131,6 +206,7 @@ export class UsersService {
   async banUser(dto: BanUserDto) {
     const user = await this.userRepository.findByPk(dto.userId, {
       include: { model: Role },
+      attributes: { exclude: ['password'] },
     });
     this.validateUser(user);
 
@@ -159,6 +235,7 @@ export class UsersService {
   private async getUserByProperty(property: string, value: string) {
     const user = await this.userRepository.findOne({
       where: { [property]: value },
+      attributes: { exclude: ['password'] },
       include: [
         { model: Comment, attributes: ['id'] },
         { model: Contest, attributes: ['id'] },

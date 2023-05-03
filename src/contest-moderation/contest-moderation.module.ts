@@ -6,17 +6,11 @@ import { User } from 'src/users/user.model';
 import { Contest } from 'src/contest/models/contest.model';
 import { ContestModeration } from './contest-moderation.model';
 import { ModerationGuard } from '../guards/moderation.guard';
-import { ContestModule } from 'src/contest/contest.module';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  providers: [ContestModerationService, ModerationGuard],
+  providers: [ContestModerationService],
   controllers: [ContestModerationController],
-  imports: [
-    SequelizeModule.forFeature([User, Contest, ContestModeration]),
-    AuthModule,
-    ContestModule,
-  ],
-  exports: [ContestModerationService, ModerationGuard],
+  imports: [SequelizeModule.forFeature([User, Contest, ContestModeration])],
+  exports: [ContestModerationService],
 })
 export class ContestModerationModule {}

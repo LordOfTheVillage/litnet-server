@@ -29,17 +29,17 @@ export class ChapterController {
     return this.chapterService.createChapter(dto);
   }
 
-  @Get('/book/:id')
-  getByBookId(
-    @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams,
-  ) {
-    return this.chapterService.getChaptersByBookId(id, query);
-  }
-
   @Get()
   getAll(@Query() query: PaginationQueryParams) {
     return this.chapterService.getAllChapters(query);
+  }
+
+  @Get('/:id/pages')
+  getPagesByChapterId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.chapterService.getPagesByChapterId(id, query);
   }
 
   @Get('/:id')

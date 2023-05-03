@@ -6,6 +6,7 @@ import { PaginationQueryParams } from 'src/types/types';
 import { Chapter } from './chapter.model';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { PatchChapterDto } from './dto/patch-chapter.dto';
+import { query } from 'express';
 
 @Injectable()
 export class ChapterService {
@@ -19,6 +20,7 @@ export class ChapterService {
 
   async createChapter({ text, ...dto }: CreateChapterDto) {
     // TODO book validation
+    // await checkPlagiarism(text);
     const { rows } = await this.getChaptersByBookId(dto.bookId, {});
     const number = rows.length + 1;
     const chapter = await this.chapterRepository.create({ ...dto, number });
@@ -42,6 +44,10 @@ export class ChapterService {
       include: { model: Page },
     });
     return chapters;
+  }
+
+  async getPagesByChapterId(id: number, query: PaginationQueryParams) {
+    return await this.pageService.getPagesByChapterId(id, query);
   }
 
   async getAllChapters({
@@ -69,9 +75,15 @@ export class ChapterService {
       where: { id },
       include: { all: true },
     });
-    this.validateChapter(chapter);
-    await this.updateChaptersNumbers(chapter.bookId, chapter.number);
-    await this.deletePagesByChapterId(chapter.pages);
+    try {
+      this.validateChapter(chapter);
+      console.log('chapter.id', chapter.id);
+      console.log('chapter.pages', chapter.pages);
+      await this.deletePagesByChapterId(chapter.pages);
+      await this.updateChaptersNumbers(chapter.bookId, chapter.number);
+    } catch (error) {
+      throw error;
+    }
 
     await chapter.destroy();
     return chapter;
@@ -128,9 +140,14 @@ export class ChapterService {
   }
 
   private async deletePagesByChapterId(pages) {
-    await pages.forEach(async (page) => {
-      await this.pageService.deletePage(page.id);
-    });
+    try {
+      await pages.forEach(async (page) => {
+        console.log('page.id', page.id);
+        await this.pageService.deletePage(page.id);
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async updateChaptersNumbers(bookId: number, number: number) {
@@ -139,5 +156,46 @@ export class ChapterService {
     chaptersToUpdate.forEach(async (chapter) => {
       await chapter.update({ number: chapter.number - 1 });
     });
+  }
+
+  private async checkPlagiarism(text: string) {
+    const chapters = await this.chapterRepository.findAll();
+  }
+
+  private calculateSimilarity(text1: string, text2: string): number {
+    const m = text1.length;
+    const n = text2.length;
+
+    if (m === 0 || n === 0) {
+      return 0;
+    }
+
+    const d: number[][] = [];
+
+    for (let i = 0; i <= m; i++) {
+      d[i] = [i];
+    }
+
+    for (let j = 0; j <= n; j++) {
+      d[0][j] = j;
+    }
+
+    for (let j = 1; j <= n; j++) {
+      for (let i = 1; i <= m; i++) {
+        if (text1[i - 1] === text2[j - 1]) {
+          d[i][j] = d[i - 1][j - 1];
+        } else {
+          d[i][j] = Math.min(
+            d[i - 1][j] + 1,
+            d[i][j - 1] + 1,
+            d[i - 1][j - 1] + 1,
+          );
+        }
+      }
+    }
+
+    const distance = d[m][n];
+    const maxLength = Math.max(m, n);
+    return 1 - distance / maxLength;
   }
 }

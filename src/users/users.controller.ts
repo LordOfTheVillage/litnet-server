@@ -15,7 +15,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
-import { PaginationQueryParams } from 'src/types/types';
+import {
+  BookQueryParams,
+  PaginationQueryParams,
+  VerifiedParams,
+} from 'src/types/types';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -35,10 +39,10 @@ export class UsersController {
     return this.usersService.createUser(userDto, img);
   }
 
-  @Roles('ADMIN')
+  @Roles('USER', 'ADMIN')
   @UseGuards(RoleGuard)
   @Get()
-  getAll(@Query() query: PaginationQueryParams) {
+  getAll(@Query() query: VerifiedParams) {
     return this.usersService.getAllUsers(query);
   }
 
@@ -50,6 +54,70 @@ export class UsersController {
   @Get('/:id/avatar')
   getAvatar(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.getAvatar(id);
+  }
+
+  @Get('/:id/library')
+  getLibraryBooks(
+    @Param('id', ParseIntPipe) userId: number,
+    @Query() query: BookQueryParams,
+  ) {
+    return this.usersService.getLibraryBooks(userId, query);
+  }
+
+  @Get('/:id/books')
+  getAllByUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: BookQueryParams,
+  ) {
+    return this.usersService.getBooksByUserId(id, query);
+  }
+
+  @Get('/:id/bookmark')
+  getBookmarksByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getBookmarksByUserId(id, query);
+  }
+
+  @Get('/:id/blog')
+  getByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getBlogsByUserId(id, query);
+  }
+
+  @Get('/:id/ratings')
+  getRatingsByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getRatingsByUserId(id, query);
+  }
+
+  @Get('/:id/contest-comments')
+  getContestCommentsByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getContestCommentsByUserId(id, query);
+  }
+
+  @Get('/:id/blog-comments')
+  getBlogCommentsByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getBlogCommentsByUserId(id, query);
+  }
+
+  @Get('/:id/book-comments')
+  getBookCommentsByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.usersService.getBookCommentsByUserId(id, query);
   }
 
   @Patch('/:id/avatar')

@@ -48,12 +48,14 @@ export class PageService {
   }
 
   async getPageById(id: number) {
-    const page = await this.pageRepository.findOne({ where: { id } });
+    const page = await this.pageRepository.findByPk(id);
     return page;
   }
 
   async deletePage(id: number) {
-    const page = await this.pageRepository.findOne({ where: { id } });
+    const page = await this.pageRepository.findByPk(id);
+    console.log('id', id);
+    console.log('page', page);
     this.validatePage(page);
     await this.updatePagesNumbers(page.chapterId, page.number);
 
@@ -62,7 +64,7 @@ export class PageService {
   }
 
   async updatePage(id: number, dto: PatchPageDto) {
-    const page = await this.pageRepository.findOne({ where: { id } });
+    const page = await this.pageRepository.findByPk(id);
     this.validatePage(page);
     await page.update(dto);
     return page;

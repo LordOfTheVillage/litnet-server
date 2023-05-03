@@ -16,12 +16,20 @@ import { Genre } from 'src/genre/genre.model';
 import { GenreService } from 'src/genre/genre.service';
 import { Rating } from 'src/rating/rating.model';
 import { RatingService } from 'src/rating/rating.service';
-import { GenreQueryParams, BookQueryParams } from 'src/types/types';
+import {
+  GenreQueryParams,
+  BookQueryParams,
+  PaginationQueryParams,
+} from 'src/types/types';
 import { User } from 'src/users/user.model';
 import { UsersService } from 'src/users/users.service';
 import { Book } from './books.model';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PatchBookDto } from './dto/patch-book.dto';
+import { ContestWinnerService } from 'src/contest-winner/contest-winner.service';
+import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
+import { PatchCommentDto } from 'src/comment/dto/patch-comment.dto';
+import { BookmarkService } from 'src/bookmark/bookmark.service';
 
 @Injectable()
 export class BooksService {
@@ -41,15 +49,14 @@ export class BooksService {
     private bookRepository: typeof Book,
     private genreService: GenreService,
     private fileService: FileService,
-    private userService: UsersService,
     private chapterService: ChapterService,
     private ratingService: RatingService,
+    private contestWinnerService: ContestWinnerService,
     private commentService: CommentService,
+    private bookmarkService: BookmarkService,
   ) {}
 
   async createBook({ genres, ...dto }: CreateBookDto, img?: any) {
-    await this.validateUser(dto.userId);
-
     const fileName = img ? await this.fileService.createFile(img) : null;
 
     const genresArray = genres.split(' ');
@@ -66,14 +73,20 @@ export class BooksService {
     offset = BooksService.DEFAULT_OFFSET,
     sort,
     order,
+    disabled: verified = true,
   }: BookQueryParams) {
     const books = await this.bookRepository.findAndCountAll({
       distinct: true,
+      where: { verified },
       limit,
       offset,
       include: BooksService.includeObject,
     });
     return this.switchSorting(books, sort, order);
+  }
+
+  async getBookmarksByBookId(id: number, query: PaginationQueryParams) {
+    return await this.bookmarkService.getByBookId(id, query);
   }
 
   async getBooksByGenreName({
@@ -82,15 +95,16 @@ export class BooksService {
     offset = BooksService.DEFAULT_OFFSET,
     sort,
     order,
+    disabled: verified = true,
   }: GenreQueryParams) {
     const books = await this.bookRepository.findAndCountAll({
       include: [
         ...BooksService.includeObject,
         { model: Genre, where: { name: genre } },
       ],
-      // where: {
-      //   '$genres$': { [Op.contains]: [genre] },
-      // },
+      where: {
+        verified,
+      },
       distinct: true,
       limit,
       offset,
@@ -99,20 +113,51 @@ export class BooksService {
     return this.switchSorting(books, sort, order);
   }
 
+  async getBookRatings(id: number, params: PaginationQueryParams = {}) {
+    return await this.ratingService.getRatingsByBookId(id, params);
+  }
+
+  async getBookChapter(id: number, params: PaginationQueryParams = {}) {
+    return await this.chapterService.getChaptersByBookId(id, params);
+  }
+
+  async getBookWins(id: number, params: PaginationQueryParams = {}) {
+    return await this.contestWinnerService.getByBookId(id);
+  }
+
+  async createComment(dto: CreateCommentDto) {
+    return await this.commentService.createComment(dto);
+  }
+
+  async getCommentsByBookId(id: number, params: PaginationQueryParams) {
+    return await this.commentService.getCommentsByBookId(id, params);
+  }
+
+  async getCommentById(id: number) {
+    return await this.commentService.getCommentById(id);
+  }
+
+  async deleteComment(id: number) {
+    return await this.commentService.deleteComment(id);
+  }
+
+  async updateComment(id: number, dto: PatchCommentDto) {
+    return await this.commentService.updateComment(dto, id);
+  }
+
   async getLibraryBooks(
-    userId: number,
+    user: User,
     {
       limit = BooksService.DEFAULT_LIMIT,
       offset = BooksService.DEFAULT_OFFSET,
       sort,
       order,
+      disabled: verified = true,
     }: BookQueryParams,
   ) {
-    const user = await this.userService.getUserById(userId);
-    if (!user) throw new NotFoundException('User with this id not found');
     const bookIds = user.bookmarks.map((b) => b.bookId);
     const books = await this.bookRepository.findAndCountAll({
-      where: { id: bookIds },
+      where: { id: bookIds, verified },
       distinct: true,
       limit,
       offset,
@@ -145,27 +190,10 @@ export class BooksService {
   async getBookById(id: number) {
     const book = await this.bookRepository.findOne({
       where: { id },
-      include: { all: true },
+      include: BooksService.includeObject,
     });
     this.validateBook(book);
     return book;
-  }
-
-  async getVerifiedBooks({
-    limit = BooksService.DEFAULT_LIMIT,
-    offset = BooksService.DEFAULT_OFFSET,
-    sort,
-    order,
-  }: BookQueryParams) {
-    const books = await this.bookRepository.findAndCountAll({
-      where: { verified: false },
-      distinct: true,
-      limit,
-      offset,
-      include: BooksService.includeObject,
-    });
-
-    return this.switchSorting(books, sort, order);
   }
 
   async verifyBook(id: number) {
@@ -211,21 +239,6 @@ export class BooksService {
       include: { all: true },
     });
     this.validateBook(book);
-
-    const comments = book.comments || [];
-    comments.forEach(
-      async (comment) => await this.commentService.deleteComment(comment.id),
-    );
-
-    const chapters = book.chapters || [];
-    chapters.forEach(
-      async (chapter) => await this.chapterService.deleteChapter(chapter.id),
-    );
-
-    const ratings = book.ratings || [];
-    ratings.forEach(
-      async (rating) => await this.ratingService.deleteRating(rating.id),
-    );
 
     await this.fileService.deleteFile(book.img);
 
@@ -285,16 +298,6 @@ export class BooksService {
     if (!book) {
       throw new HttpException(
         { message: 'Such book does not exist' },
-        HttpStatus.NOT_FOUND,
-      );
-    }
-  }
-
-  private async validateUser(id: number) {
-    const user = await this.userService.getUserById(id);
-    if (!user) {
-      throw new HttpException(
-        { message: 'User not found' },
         HttpStatus.NOT_FOUND,
       );
     }

@@ -5,13 +5,19 @@ import { PaginationQueryParams } from 'src/types/types';
 import { Blog } from './blog.model';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
+import { BlogCommentService } from 'src/blog-comment/blog-comment.service';
+import { PatchBlogCommentDto } from 'src/blog-comment/dto/patch-blog-comment.dto';
+import { CreateBlogCommentDto } from 'src/blog-comment/dto/create-blog-comment.dto';
 
 @Injectable()
 export class BlogService {
   private static readonly DEFAULT_LIMIT = 7;
   private static readonly DEFAULT_OFFSET = 0;
 
-  constructor(@InjectModel(Blog) private blogRepository: typeof Blog) {}
+  constructor(
+    @InjectModel(Blog) private blogRepository: typeof Blog,
+    private blogCommentsService: BlogCommentService,
+  ) {}
 
   async createBlog(dto: CreateBlogDto) {
     const suspect = await this.blogRepository.findOne({
@@ -40,6 +46,30 @@ export class BlogService {
     const blog = await this.blogRepository.findByPk(id);
     this.validateBlog(blog);
     return blog;
+  }
+
+  async getBlogCommentById(id: number) {
+    return await this.blogCommentsService.getBlogCommentById(id);
+  }
+
+  async getAllBlogComments(query: PaginationQueryParams) {
+    return await this.blogCommentsService.getAllBlogComments(query);
+  }
+
+  async getBlogCommentsByBlogId(id: number, query: PaginationQueryParams) {
+    return await this.blogCommentsService.getBlogCommentsByBlogId(id, query);
+  }
+
+  async updateBlogComment(id: number, body: PatchBlogCommentDto) {
+    return await this.blogCommentsService.updateBlogComment(id, body);
+  }
+
+  async createBlogComment(body: CreateBlogCommentDto) {
+    return await this.blogCommentsService.createBlogComment(body);
+  }
+
+  async deleteBlogComment(id: number) {
+    return await this.blogCommentsService.deleteBlogComment(id);
   }
 
   async getBlogsByUserId(

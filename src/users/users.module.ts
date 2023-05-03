@@ -15,6 +15,14 @@ import { User } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
+import { CommentModule } from 'src/comment/comment.module';
+import { BooksModule } from 'src/books/books.module';
+import { BookmarkModule } from 'src/bookmark/bookmark.module';
+import { BlogCommentModule } from 'src/blog-comment/blog-comment.module';
+import { BlogModule } from 'src/blog/blog.module';
+import { ContestCommentModule } from 'src/contest-comment/contest-comment.module';
+import { ContestModule } from 'src/contest/contest.module';
+import { RatingModule } from 'src/rating/rating.module';
 
 @Module({
   controllers: [UsersController],
@@ -32,8 +40,16 @@ import { ContestModeration } from 'src/contest-moderation/contest-moderation.mod
       ContestModeration,
     ]),
     forwardRef(() => AuthModule),
+    BooksModule,
     FileModule,
     RoleModule,
+    CommentModule,
+    BlogCommentModule,
+    ContestCommentModule,
+    BooksModule,
+    BookmarkModule,
+    BlogModule,
+    RatingModule,
   ],
   exports: [UsersService],
 })

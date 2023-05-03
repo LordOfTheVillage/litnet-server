@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { ContestWinner } from './contest-winner.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateContestWinnerDto } from './dto/create-contest-winner.dto';
+import { Contest } from 'src/contest/models/contest.model';
 
 @Injectable()
 export class ContestWinnerService {
@@ -22,6 +23,7 @@ export class ContestWinnerService {
   async getByBookId(id: number) {
     return await this.contestWinnerRepository.findAndCountAll({
       where: { bookId: id },
+      include: { model: Contest, attributes: ['title'] },
     });
   }
 

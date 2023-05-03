@@ -15,10 +15,16 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
-import { GenreQueryParams, BookQueryParams } from 'src/types/types';
+import {
+  GenreQueryParams,
+  BookQueryParams,
+  PaginationQueryParams,
+} from 'src/types/types';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PatchBookDto } from './dto/patch-book.dto';
+import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
+import { PatchCommentDto } from 'src/comment/dto/patch-comment.dto';
 
 @Controller('books')
 export class BooksController {
@@ -40,20 +46,73 @@ export class BooksController {
     return this.booksService.getAllBooks(query);
   }
 
-  @Get('/library/:userId')
-  getLibraryBooks(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Query() query: BookQueryParams,
+  @Get('/:id/ratings')
+  getBookRatings(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.booksService.getLibraryBooks(userId, query);
+    return this.booksService.getBookRatings(id, query);
   }
 
-  @Get('/user/:id')
-  getAllByUser(
+  @Get('/books/:id/chapters')
+  getBookChapter(
     @Param('id', ParseIntPipe) id: number,
-    @Query() query: BookQueryParams,
+    @Query() query: PaginationQueryParams,
   ) {
-    return this.booksService.getBooksByUserId(id, query);
+    return this.booksService.getBookChapter(id, query);
+  }
+
+  @Get('/books/:id/winner')
+  getBookWins(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.booksService.getBookWins(id, query);
+  }
+
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
+  @Post('/:id/comments')
+  createComment(@Body() dto: CreateCommentDto) {
+    return this.booksService.createComment(dto);
+  }
+
+  @Get('/:id/comments')
+  getCommentByBookId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams,
+  ) {
+    return this.booksService.getCommentsByBookId(id, query);
+  }
+
+  @Get('/:bookId/comments/:id')
+  getCommentById(@Param('id', ParseIntPipe) id: number) {
+    return this.booksService.getCommentById(id);
+  }
+
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
+  @Delete('/:bookId/comments/:id')
+  deleteComment(@Param('id', ParseIntPipe) id: number) {
+    return this.booksService.deleteComment(id);
+  }
+
+  @Roles('USER', 'ADMIN')
+  @UseGuards(RoleGuard)
+  @Patch('/:bookId/comments/:id')
+  updateComment(
+    @Body() dto: PatchCommentDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.booksService.updateComment(id, dto);
+  }
+
+  @Get('/book/:id')
+  getBookmarksByBookId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: PaginationQueryParams
+  ) {
+    return this.booksService.getBookmarksByBookId(id, query);
   }
 
   @Get('/genre')
@@ -65,16 +124,7 @@ export class BooksController {
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.getBookById(id);
   }
-
-  // TODO get non-verified books
-  @Roles('ADMIN')
-  @UseGuards(RoleGuard)
-  @Get('/verify/list')
-  getVerifiedBooks(@Query() query: BookQueryParams) {
-    return this.booksService.getVerifiedBooks(query);
-  }
-
-  // TODO verify book
+  
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
   @Post('/verify/:id')

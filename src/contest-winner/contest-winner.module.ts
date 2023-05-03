@@ -5,17 +5,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Contest } from 'src/contest/models/contest.model';
 import { Book } from 'src/books/books.model';
 import { ContestWinner } from './contest-winner.model';
-import { ContestModule } from 'src/contest/contest.module';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [ContestWinnerService],
   controllers: [ContestWinnerController],
-  imports: [
-    SequelizeModule.forFeature([ContestWinner, Book, Contest]),
-    AuthModule,
-    ContestModule,
-  ],
+  imports: [SequelizeModule.forFeature([ContestWinner, Book, Contest])],
   exports: [ContestWinnerService],
 })
 export class ContestWinnerModule {}

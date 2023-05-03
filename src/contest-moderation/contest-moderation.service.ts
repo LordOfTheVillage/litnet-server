@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ContestModeration } from './contest-moderation.model';
 import { CreateContestModerationDto } from './dto/create-moderation.dto';
 import { PaginationQueryParams } from 'src/types/types';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class ContestModerationService {
@@ -44,6 +45,7 @@ export class ContestModerationService {
       distinct: true,
       limit,
       offset,
+      include: { model: User },
     });
 
     return moderations;
@@ -83,6 +85,7 @@ export class ContestModerationService {
       distinct: true,
       limit,
       offset,
+      include: { model: User, attributes: ['id', 'name'] },
     });
   }
 

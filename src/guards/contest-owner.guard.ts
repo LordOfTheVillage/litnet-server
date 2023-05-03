@@ -31,9 +31,8 @@ export class ContestOwnerGuard implements CanActivate {
         throw new NotAcceptableException('User was banned');
       }
 
-      const contestId = req.params.id;
-      if (!contestId)
-        throw new ForbiddenException('You does not have enough rights');
+      const contestId = req.params.contestId || req.params.id;
+      if (!contestId) throw new ForbiddenException('Contest was not found');
 
       const contest = await this.contestService.getContestById(contestId);
 

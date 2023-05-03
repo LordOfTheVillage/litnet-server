@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -9,7 +9,6 @@ import { BookGenre } from 'src/genre/book-genre.model';
 import { GenreModule } from 'src/genre/genre.module';
 import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
-import { UsersModule } from 'src/users/users.module';
 import { Comment } from 'src/comment/comment.model';
 import { ChapterModule } from 'src/chapter/chapter.module';
 import { CommentModule } from 'src/comment/comment.module';
@@ -17,6 +16,8 @@ import { RatingModule } from 'src/rating/rating.module';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { AuthModule } from 'src/auth/auth.module';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
+import { ContestWinnerModule } from 'src/contest-winner/contest-winner.module';
+import { BookmarkModule } from 'src/bookmark/bookmark.module';
 
 @Module({
   providers: [BooksService],
@@ -34,11 +35,12 @@ import { ContestApplication } from 'src/contest-application/contest-application.
     ]),
     GenreModule,
     FileModule,
-    UsersModule,
     ChapterModule,
     CommentModule,
     RatingModule,
     AuthModule,
+    ContestWinnerModule,
+    BookmarkModule,
   ],
   exports: [BooksService],
 })

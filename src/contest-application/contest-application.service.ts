@@ -1,16 +1,19 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotAcceptableException,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateContestApplicationDto } from './dto/create-contest-application.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ContestApplication } from './contest-application.model';
-import { UpdateContestApplicationDto } from './dto/update-contest-application.dto';
+import { PatchContestApplicationDto } from './dto/patch-contest-application.dto';
 import { ContestService } from 'src/contest/contest.service';
 import { BooksService } from 'src/books/books.service';
-import { PaginationQueryParams } from 'src/types/types';
+import { VerifiedParams } from 'src/types/types';
+import { Book } from 'src/books/books.model';
 
 @Injectable()
 export class ContestApplicationService {
@@ -19,6 +22,7 @@ export class ContestApplicationService {
   constructor(
     @InjectModel(ContestApplication)
     private contestApplicationRepository: typeof ContestApplication,
+    @Inject(forwardRef(() => ContestService))
     private contestService: ContestService,
     private bookService: BooksService,
   ) {}
@@ -34,7 +38,7 @@ export class ContestApplicationService {
     return await this.contestApplicationRepository.create(dto);
   }
 
-  async updateApplication(id: number, dto: UpdateContestApplicationDto) {
+  async updateApplication(id: number, dto: PatchContestApplicationDto) {
     const application = await this.contestApplicationRepository.findByPk(id);
     this.checkNotFound(application);
 
@@ -60,51 +64,25 @@ export class ContestApplicationService {
     {
       limit = ContestApplicationService.DEFAULT_LIMIT,
       offset = ContestApplicationService.DEFAULT_OFFSET,
-    }: PaginationQueryParams,
+      disabled: status = true,
+    }: VerifiedParams,
   ) {
     return await this.contestApplicationRepository.findAndCountAll({
-      where: { contestId: id },
+      where: { contestId: id, status },
       distinct: true,
       limit,
       offset,
-    });
-  }
-
-  async getRealApplicationsByContestId(
-    id: number,
-    {
-      limit = ContestApplicationService.DEFAULT_LIMIT,
-      offset = ContestApplicationService.DEFAULT_OFFSET,
-    }: PaginationQueryParams,
-  ) {
-    return await this.contestApplicationRepository.findAndCountAll({
-      where: { contestId: id, status: true },
-      distinct: true,
-      limit,
-      offset,
-    });
-  }
-
-  async getUnrealApplicationsByContestId(
-    id: number,
-    {
-      limit = ContestApplicationService.DEFAULT_LIMIT,
-      offset = ContestApplicationService.DEFAULT_OFFSET,
-    }: PaginationQueryParams,
-  ) {
-    return await this.contestApplicationRepository.findAndCountAll({
-      where: { contestId: id, status: false },
-      distinct: true,
-      limit,
-      offset,
+      include: { model: Book },
     });
   }
 
   async getAllApplications({
     limit = ContestApplicationService.DEFAULT_LIMIT,
     offset = ContestApplicationService.DEFAULT_OFFSET,
-  }: PaginationQueryParams) {
+    disabled: status = true,
+  }: VerifiedParams) {
     return await this.contestApplicationRepository.findAndCountAll({
+      where: { status },
       distinct: true,
       limit,
       offset,
@@ -117,6 +95,10 @@ export class ContestApplicationService {
 
     if (contest.countCharacters && bookSymbols < contest.countCharacters) {
       throw new NotAcceptableException("Book doesn't have enough characters");
+    }
+
+    if (contest.status) {
+      throw new NotAcceptableException('Contest completed');
     }
   }
 

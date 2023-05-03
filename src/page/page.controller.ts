@@ -28,14 +28,6 @@ export class PageController {
     return this.pageService.createPage(dto);
   }
 
-  @Get('/chapter/:id')
-  getByChapterId(
-    @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams,
-  ) {
-    return this.pageService.getPagesByChapterId(id, query);
-  }
-
   @Get()
   getAll(@Query() query: PaginationQueryParams) {
     return this.pageService.getAllPages(query);

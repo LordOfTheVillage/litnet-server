@@ -33,22 +33,6 @@ export class RatingController {
     return this.ratingService.getAllRatings(query);
   }
 
-  @Get('/book/:id')
-  getByBookId(
-    @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams,
-  ) {
-    return this.ratingService.getRatingsByBookId(id, query);
-  }
-
-  @Get('/user/:id')
-  getByUserId(
-    @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams,
-  ) {
-    return this.ratingService.getRatingsByUserId(id, query);
-  }
-
   @Get('/user/:userId/book/:bookId')
   getByUserIdAndBookId(
     @Param('userId', ParseIntPipe) userId: number,
