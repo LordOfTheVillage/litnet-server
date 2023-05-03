@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PaginationQueryParams } from 'src/types/types';
 import { CreateRatingDto } from './dto/create-rating.dto';
@@ -18,12 +13,10 @@ export class RatingService {
   constructor(@InjectModel(Rating) private ratingRepository: typeof Rating) {}
 
   async createRating(dto: CreateRatingDto) {
-    // TODO user and book validation
     const ratingById = await await this.ratingRepository.findOne({
       where: { userId: dto.userId, bookId: dto.bookId },
     });
     if (ratingById) {
-      // throw new HttpException('Such rating exists', HttpStatus.BAD_REQUEST);
       await this.updateRating({ ...dto }, ratingById.id);
     } else {
       const rating = await this.ratingRepository.create(dto);

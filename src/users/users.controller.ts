@@ -152,8 +152,8 @@ export class UsersController {
     return this.usersService.banUser(banDto);
   }
 
-  @Roles(RoleNames.ADMIN)
-  @UseGuards(RoleGuard)
+  // @Roles(RoleNames.ADMIN)
+  // @UseGuards(RoleGuard)
   @Post('/role')
   addRole(@Body() dto: AddRoleDto) {
     return this.usersService.addRole(dto);
