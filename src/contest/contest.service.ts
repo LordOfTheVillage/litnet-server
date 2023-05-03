@@ -21,7 +21,7 @@ import { ContestApplicationService } from 'src/contest-application/contest-appli
 import { ContestModerationService } from 'src/contest-moderation/contest-moderation.service';
 import { ContestWinnerService } from 'src/contest-winner/contest-winner.service';
 import { CreateContestApplicationDto } from 'src/contest-application/dto/create-contest-application.dto';
-import { PatchContestApplicationDto } from 'src/contest-application/dto/patch-contest-application.dto';
+import { PatchContestApplicationDto } from 'src/contest-application/dto/update-contest-application.dto';
 import { CreateContestWinnerDto } from 'src/contest-winner/dto/create-contest-winner.dto';
 import { CreateContestModerationDto } from 'src/contest-moderation/dto/create-moderation.dto';
 

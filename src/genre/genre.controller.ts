@@ -14,22 +14,18 @@ import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreService } from './genre.service';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleGuard } from 'src/guards/role.guard';
+import { RoleNames } from 'src/constants';
 
 @Controller('genre')
 export class GenreController {
   constructor(private genreService: GenreService) {}
 
-  @Roles('ADMIN')
+  @Roles(RoleNames.ADMIN)
   @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateGenreDto) {
     return this.genreService.createGenre(dto);
   }
-
-  // @Get('/:name')
-  // getByName(@Param('name') name: string) {
-  //   return this.genreService.getGenreByName(name);
-  // }
 
   @Get('/:id')
   getById(@Param('id', ParseIntPipe) id: number) {
@@ -41,7 +37,7 @@ export class GenreController {
     return this.genreService.getAllGenres(query);
   }
 
-  @Roles('ADMIN')
+  @Roles(RoleNames.ADMIN)
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {

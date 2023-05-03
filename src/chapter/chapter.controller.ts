@@ -10,19 +10,19 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { query } from 'express';
 import { PaginationQueryParams } from 'src/types/types';
 import { ChapterService } from './chapter.service';
 import { CreateChapterDto } from './dto/create-chapter.dto';
 import { PatchChapterDto } from './dto/patch-chapter.dto';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { RoleNames } from 'src/constants';
 
 @Controller('chapters')
 export class ChapterController {
   constructor(private chapterService: ChapterService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateChapterDto) {
@@ -47,14 +47,14 @@ export class ChapterController {
     return this.chapterService.getChapterById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.chapterService.deleteChapter(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: PatchChapterDto) {

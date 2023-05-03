@@ -25,12 +25,13 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { PatchBookDto } from './dto/patch-book.dto';
 import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
 import { PatchCommentDto } from 'src/comment/dto/patch-comment.dto';
+import { RoleNames } from 'src/constants';
 
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   @UseInterceptors(FileInterceptor('img'))
@@ -54,7 +55,7 @@ export class BooksController {
     return this.booksService.getBookRatings(id, query);
   }
 
-  @Get('/books/:id/chapters')
+  @Get('/:id/chapters')
   getBookChapter(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: PaginationQueryParams,
@@ -62,7 +63,7 @@ export class BooksController {
     return this.booksService.getBookChapter(id, query);
   }
 
-  @Get('/books/:id/winner')
+  @Get('/:id/winner')
   getBookWins(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: PaginationQueryParams,
@@ -70,7 +71,7 @@ export class BooksController {
     return this.booksService.getBookWins(id, query);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post('/:id/comments')
   createComment(@Body() dto: CreateCommentDto) {
@@ -90,14 +91,14 @@ export class BooksController {
     return this.booksService.getCommentById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:bookId/comments/:id')
   deleteComment(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.deleteComment(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:bookId/comments/:id')
   updateComment(
@@ -107,10 +108,10 @@ export class BooksController {
     return this.booksService.updateComment(id, dto);
   }
 
-  @Get('/book/:id')
+  @Get('/:id/bookmark')
   getBookmarksByBookId(
     @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams
+    @Query() query: PaginationQueryParams,
   ) {
     return this.booksService.getBookmarksByBookId(id, query);
   }
@@ -124,15 +125,15 @@ export class BooksController {
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.getBookById(id);
   }
-  
-  @Roles('ADMIN')
+
+  @Roles(RoleNames.ADMIN)
   @UseGuards(RoleGuard)
   @Post('/verify/:id')
   verifyBook(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.verifyBook(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:id')
   @UseInterceptors(FileInterceptor('img'))
@@ -144,7 +145,7 @@ export class BooksController {
     return this.booksService.updateBook(dto, id, img);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {

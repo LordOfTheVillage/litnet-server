@@ -18,12 +18,13 @@ import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { PatchBlogCommentDto } from 'src/blog-comment/dto/patch-blog-comment.dto';
 import { CreateBlogCommentDto } from 'src/blog-comment/dto/create-blog-comment.dto';
+import { RoleNames } from 'src/constants';
 
 @Controller('blog')
 export class BlogController {
   constructor(private blogService: BlogService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateBlogDto) {
@@ -35,7 +36,7 @@ export class BlogController {
     return this.blogService.getBlogById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post('/:id/comments')
   createBlogComment(@Body() dto: CreateBlogCommentDto) {
@@ -55,7 +56,7 @@ export class BlogController {
     return this.blogService.getBlogCommentsByBlogId(id, query);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:blogId/comments/:id')
   updateBlogComment(
@@ -75,14 +76,14 @@ export class BlogController {
     return this.blogService.getAllBlogs(query);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: PatchBlogDto) {
     return this.blogService.updateBlog(id, dto);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {

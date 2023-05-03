@@ -22,7 +22,6 @@ import {
   PaginationQueryParams,
 } from 'src/types/types';
 import { User } from 'src/users/user.model';
-import { UsersService } from 'src/users/users.service';
 import { Book } from './books.model';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PatchBookDto } from './dto/patch-book.dto';
@@ -37,7 +36,7 @@ export class BooksService {
   private static readonly DEFAULT_OFFSET = undefined;
   private static includeObject = [
     { model: Genre, attributes: ['id', 'name'], through: { attributes: [] } },
-    { model: Chapter, attributes: ['id'] },
+    { model: Chapter, attributes: ['id', 'title', 'number'] },
     { model: Comment, attributes: ['id'] },
     { model: Rating, attributes: ['rating'] },
     { model: User, attributes: ['name'] },

@@ -23,16 +23,17 @@ import { RoleGuard } from 'src/guards/role.guard';
 import { CreateContestCommentDto } from 'src/contest-comment/dto/create-contest-comment.dto';
 import { PatchContestCommentDto } from 'src/contest-comment/dto/patch-contest-comment.dto';
 import { CreateContestApplicationDto } from 'src/contest-application/dto/create-contest-application.dto';
-import { PatchContestApplicationDto } from 'src/contest-application/dto/patch-contest-application.dto';
+import { PatchContestApplicationDto } from 'src/contest-application/dto/update-contest-application.dto';
 import { ModerationGuard } from 'src/guards/moderation.guard';
 import { CreateContestWinnerDto } from 'src/contest-winner/dto/create-contest-winner.dto';
 import { CreateContestModerationDto } from 'src/contest-moderation/dto/create-moderation.dto';
+import { RoleNames } from 'src/constants';
 
 @Controller('contest')
 export class ContestController {
   constructor(private contestService: ContestService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   @UseInterceptors(FileInterceptor('img'))
@@ -43,14 +44,14 @@ export class ContestController {
     return this.contestService.createContest(contestDto, img);
   }
 
-  @Get('/:id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  @Get('/:contestId')
+  getById(@Param('contestId', ParseIntPipe) id: number) {
     return this.contestService.getContestById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
-  @Post('/contest/:id/comments')
+  @Post('/:contestId/comments')
   createComment(@Body() dto: CreateContestCommentDto) {
     return this.contestService.createComment(dto);
   }
@@ -63,29 +64,29 @@ export class ContestController {
     return this.contestService.getContestsByUserId(id, query);
   }
 
-  @Get('/contest/:contestId/comments')
+  @Get('/:contestId/comments')
   getCommentsByContestId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('contestId', ParseIntPipe) id: number,
     @Query() query: PaginationQueryParams,
   ) {
     return this.contestService.getCommentsByContestId(id, query);
   }
 
-  @Get('/contest/:contestId/comments/:id')
+  @Get('/:contestId/comments/:id')
   getCommentById(@Param('id', ParseIntPipe) id: number) {
     return this.contestService.getCommentById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
-  @Delete('/contest/:contestId/comments/:id')
+  @Delete('/:contestId/comments/:id')
   deleteComment(@Param('id', ParseIntPipe) id: number) {
     return this.contestService.deleteComment(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
-  @Patch('/contest/:contestId/comments/:id')
+  @Patch('/:contestId/comments/:id')
   updateComment(
     @Body() dto: PatchContestCommentDto,
     @Param('id', ParseIntPipe) id: number,
@@ -93,9 +94,9 @@ export class ContestController {
     return this.contestService.updateComment(id, dto);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
-  @Post('/:id/application')
+  @Post('/:contestId/application')
   createApplication(@Body() dto: CreateContestApplicationDto) {
     return this.contestService.createApplication(dto);
   }
@@ -120,29 +121,29 @@ export class ContestController {
     return this.contestService.getApplicationById(id);
   }
 
-  @Get('/:id/application')
+  @Get('/:contestId/application')
   getApplicationsByContestId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('contestId', ParseIntPipe) id: number,
     @Query() query: VerifiedParams,
   ) {
     return this.contestService.getApplicationsByContestId(id, query);
   }
 
   @UseGuards(ContestOwnerGuard)
-  @Post('/:id/winner')
+  @Post('/:contestId/winner')
   createWinner(@Body() dto: CreateContestWinnerDto) {
     return this.contestService.createWinner(dto);
   }
 
   @UseGuards(ContestOwnerGuard)
-  @Post('/:id/moderation')
+  @Post('/:contestId/moderation')
   createModeration(@Body() dto: CreateContestModerationDto) {
     return this.contestService.createModeration(dto);
   }
 
-  @Get('/:id/moderation')
+  @Get('/:contestId/moderation')
   getModeratorsByContestId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('contestId', ParseIntPipe) id: number,
     @Query() query: PaginationQueryParams,
   ) {
     console.log(id);
@@ -160,12 +161,12 @@ export class ContestController {
     return this.contestService.getAllContests(query);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
-  @Patch('/:id')
+  @Patch('/:contestId')
   @UseInterceptors(FileInterceptor('img'))
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('contestId', ParseIntPipe) id: number,
     @Body() contestDto: PatchContestDto,
     @UploadedFile() img?: Express.Multer.File,
   ) {
@@ -173,8 +174,8 @@ export class ContestController {
   }
 
   @UseGuards(ContestOwnerGuard)
-  @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  @Delete('/:contestId')
+  delete(@Param('contestId', ParseIntPipe) id: number) {
     return this.contestService.deleteContest(id);
   }
 }

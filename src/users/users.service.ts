@@ -34,6 +34,7 @@ import { BlogService } from 'src/blog/blog.service';
 import { ContestCommentService } from 'src/contest-comment/contest-comment.service';
 import { ContestService } from 'src/contest/contest.service';
 import { RatingService } from 'src/rating/rating.service';
+import { RoleNames } from 'src/constants';
 
 @Injectable()
 export class UsersService {
@@ -59,7 +60,7 @@ export class UsersService {
     });
     this.checkExistingUser(suspectUser);
     const fileName = img ? await this.fileService.createFile(img) : null;
-    const role = await this.roleService.getRoleByValue('USER');
+    const role = await this.roleService.getRoleByValue(RoleNames.USER);
     const user = await this.userRepository.create({
       ...dto,
       img: fileName,
@@ -210,7 +211,7 @@ export class UsersService {
     });
     this.validateUser(user);
 
-    if (user.role.value === 'ADMIN') {
+    if (user.role.value === RoleNames.ADMIN) {
       throw new MethodNotAllowedException('User has an admin role');
     }
 
@@ -235,7 +236,6 @@ export class UsersService {
   private async getUserByProperty(property: string, value: string) {
     const user = await this.userRepository.findOne({
       where: { [property]: value },
-      attributes: { exclude: ['password'] },
       include: [
         { model: Comment, attributes: ['id'] },
         { model: Contest, attributes: ['id'] },

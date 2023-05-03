@@ -25,6 +25,7 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './users.service';
+import { RoleNames } from 'src/constants';
 
 @Controller('users')
 export class UsersController {
@@ -39,7 +40,7 @@ export class UsersController {
     return this.usersService.createUser(userDto, img);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Get()
   getAll(@Query() query: VerifiedParams) {
@@ -144,14 +145,14 @@ export class UsersController {
     return this.usersService.deleteUser(id);
   }
 
-  @Roles('ADMIN')
+  @Roles(RoleNames.ADMIN)
   @UseGuards(RoleGuard)
   @Post('/ban')
   banUser(@Body() banDto: BanUserDto) {
     return this.usersService.banUser(banDto);
   }
 
-  @Roles('ADMIN')
+  @Roles(RoleNames.ADMIN)
   @UseGuards(RoleGuard)
   @Post('/role')
   addRole(@Body() dto: AddRoleDto) {

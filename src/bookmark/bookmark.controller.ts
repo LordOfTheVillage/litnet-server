@@ -10,26 +10,26 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { query } from 'express';
 import { PaginationQueryParams } from 'src/types/types';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 import { PatchBookmarkDto } from './dto/patch-bookmark.dto';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { RoleNames } from 'src/constants';
 
 @Controller('bookmark')
 export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreateBookmarkDto) {
     return this.bookmarkService.createBookmark(dto);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
@@ -41,7 +41,7 @@ export class BookmarkController {
     return this.bookmarkService.getById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: PatchBookmarkDto) {

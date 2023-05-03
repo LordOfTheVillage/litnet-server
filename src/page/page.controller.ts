@@ -16,12 +16,13 @@ import { PatchPageDto } from './dto/patch-page.dto';
 import { PageService } from './page.service';
 import { RoleGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { RoleNames } from 'src/constants';
 
 @Controller('pages')
 export class PageController {
   constructor(private pageService: PageService) {}
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Post()
   create(@Body() dto: CreatePageDto) {
@@ -38,14 +39,14 @@ export class PageController {
     return this.pageService.getPageById(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Delete('/:id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.pageService.deletePage(id);
   }
 
-  @Roles('USER', 'ADMIN')
+  @Roles(...Object.values(RoleNames))
   @UseGuards(RoleGuard)
   @Patch('/:id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: PatchPageDto) {
