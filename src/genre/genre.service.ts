@@ -7,8 +7,8 @@ import { Genre } from './genre.model';
 
 @Injectable()
 export class GenreService {
-  private static readonly DEFAULT_LIMIT = 7;
-  private static readonly DEFAULT_OFFSET = 0;
+  private static readonly DEFAULT_LIMIT = undefined;
+  private static readonly DEFAULT_OFFSET = undefined;
 
   constructor(@InjectModel(Genre) private genreRepository: typeof Genre) {}
 
@@ -18,9 +18,7 @@ export class GenreService {
   }
 
   async getGenreById(id: number) {
-    const genre = await this.genreRepository.findByPk(id, {
-      // include: { all: true },
-    });
+    const genre = await this.genreRepository.findByPk(id, {});
     console.log(genre);
     this.validateGenre(genre);
     return genre;
@@ -30,7 +28,6 @@ export class GenreService {
     console.log('name', name);
     const genre = await this.genreRepository.findOne({
       where: { name },
-      // include: { all: true },
     });
     console.log('genre', genre);
 

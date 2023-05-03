@@ -66,6 +66,9 @@ export class ContestService {
     offset = ContestService.DEFAULT_OFFSET,
     disabled = false,
   }: VerifiedParams) {
+    console.log("limit", limit)
+    console.log("offset", offset)
+    console.log("disabled", disabled)
     const contests = await this.contestRepository.findAndCountAll({
       distinct: true,
       where: {
