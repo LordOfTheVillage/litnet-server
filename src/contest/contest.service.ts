@@ -70,13 +70,13 @@ export class ContestService {
     console.log("offset", offset)
     console.log("disabled", disabled)
     const contests = await this.contestRepository.findAndCountAll({
-      distinct: true,
+      // distinct: true,
       where: {
         status: disabled,
       },
       limit,
       offset,
-      // include: { model: ContestApplication, attributes: ['id'] },
+      include: { model: ContestApplication, attributes: ['id'] },
     });
     return contests;
   }
