@@ -19,7 +19,7 @@ export class GenreService {
 
   async getGenreById(id: number) {
     const genre = await this.genreRepository.findByPk(id, {
-      include: { all: true },
+      // include: { all: true },
     });
     console.log(genre);
     this.validateGenre(genre);
@@ -27,10 +27,13 @@ export class GenreService {
   }
 
   async getGenreByName(name: string) {
+    console.log('name', name);
     const genre = await this.genreRepository.findOne({
       where: { name },
-      include: { all: true },
+      // include: { all: true },
     });
+    console.log('genre', genre);
+
     this.validateGenre(genre);
     return genre;
   }
