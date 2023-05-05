@@ -83,18 +83,10 @@ export class ContestService {
     return contests;
   }
 
-  async getContestsByUserId(
-    id: number,
-    {
-      limit = ContestService.DEFAULT_LIMIT,
-      offset = ContestService.DEFAULT_OFFSET,
-    }: PaginationQueryParams,
-  ) {
-    const contests = await this.contestRepository.findAndCountAll({
+  async getContestByUserId(id: number) {
+    const contests = await this.contestRepository.findOne({
       where: { userId: id },
-      distinct: true,
-      limit,
-      offset,
+      include: { model: ContestApplication, attributes: ['id'] },
     });
     return contests;
   }
