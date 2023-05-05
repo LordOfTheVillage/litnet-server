@@ -16,7 +16,7 @@ interface PageCreationAttrs {
   chapterId: number;
 }
 
-@Table({ tableName: 'page' })
+@Table({ tableName: 'pages' })
 export class Page extends Model<Page, PageCreationAttrs> {
   @Column({
     type: DataType.INTEGER,

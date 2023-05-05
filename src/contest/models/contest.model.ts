@@ -27,7 +27,7 @@ interface ContestCreationAttrs {
   countCharacters: number;
 }
 
-@Table({ tableName: 'contest' })
+@Table({ tableName: 'contests' })
 export class Contest extends Model<Contest, ContestCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
