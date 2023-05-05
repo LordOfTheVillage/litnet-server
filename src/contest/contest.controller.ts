@@ -57,11 +57,8 @@ export class ContestController {
   }
 
   @Get('/user/:id')
-  getContestsByUserId(
-    @Param('id', ParseIntPipe) id: number,
-    @Query() query: PaginationQueryParams,
-  ) {
-    return this.contestService.getContestsByUserId(id, query);
+  getContestsByUserId(@Param('id', ParseIntPipe) id: number) {
+    return this.contestService.getContestByUserId(id);
   }
 
   @Get('/:contestId/comments')
