@@ -6,7 +6,7 @@ async function bootstrap() {
   const PORT = parseInt(`${process.env.PORT}`) || 5000;
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ forbidUnknownValues: false }));
-  app.enableCors();
+  app.enableCors({ origin: 'https://litnet.herokuapp.com' });
   await app.listen(PORT);
 }
 bootstrap();
