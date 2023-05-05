@@ -40,6 +40,8 @@ import { ContestModerationModule } from './contest-moderation/contest-moderation
 import { ContestModeration } from './contest-moderation/contest-moderation.model';
 import { ContestWinnerModule } from './contest-winner/contest-winner.module';
 import { ContestWinner } from './contest-winner/contest-winner.model';
+import { ProducerApplicationModule } from './producer-application/producer-application.module';
+import { ProducerApplication } from './producer-application/producer-application.model';
 
 @Module({
   imports: [
@@ -76,6 +78,7 @@ import { ContestWinner } from './contest-winner/contest-winner.model';
         ContestApplication,
         ContestModeration,
         ContestWinner,
+        ProducerApplication,
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -99,6 +102,7 @@ import { ContestWinner } from './contest-winner/contest-winner.model';
     ContestApplicationModule,
     ContestModerationModule,
     ContestWinnerModule,
+    ProducerApplicationModule,
   ],
 })
 export class AppModule {}
