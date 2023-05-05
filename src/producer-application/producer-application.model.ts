@@ -13,7 +13,7 @@ interface ProducerApplicationCreationAttrs {
   text: string;
 }
 
-@Table({ tableName: 'producer-application' })
+@Table({ tableName: 'producer-application', timestamps: false })
 export class ProducerApplication extends Model<
   ProducerApplication,
   ProducerApplicationCreationAttrs
