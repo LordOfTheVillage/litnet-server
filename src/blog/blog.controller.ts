@@ -10,7 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { PaginationQueryParams } from 'src/types/types';
+import { PaginationQueryParams, SearchQueryParams } from 'src/types/types';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
@@ -72,7 +72,7 @@ export class BlogController {
   }
 
   @Get()
-  getAll(@Query() query: PaginationQueryParams) {
+  getAll(@Query() query: SearchQueryParams) {
     return this.blogService.getAllBlogs(query);
   }
 

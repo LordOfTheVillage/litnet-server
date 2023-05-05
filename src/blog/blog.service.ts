@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { BlogComment } from 'src/blog-comment/blog-comment.model';
-import { PaginationQueryParams } from 'src/types/types';
+import { PaginationQueryParams, SearchQueryParams } from 'src/types/types';
 import { Blog } from './blog.model';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { PatchBlogDto } from './dto/patch-blog.dto';
 import { BlogCommentService } from 'src/blog-comment/blog-comment.service';
 import { PatchBlogCommentDto } from 'src/blog-comment/dto/patch-blog-comment.dto';
 import { CreateBlogCommentDto } from 'src/blog-comment/dto/create-blog-comment.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class BlogService {
@@ -32,11 +33,17 @@ export class BlogService {
   async getAllBlogs({
     limit = BlogService.DEFAULT_LIMIT,
     offset = BlogService.DEFAULT_OFFSET,
-  }: PaginationQueryParams) {
+    search: title = '',
+  }: SearchQueryParams) {
     const blogs = await this.blogRepository.findAndCountAll({
       distinct: true,
       limit,
       offset,
+      where: {
+        title: {
+          [Op.iLike]: `%${title}%`,
+        },
+      },
       include: { model: BlogComment, attributes: ['id'] },
     });
     return blogs;

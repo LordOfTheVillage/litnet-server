@@ -43,7 +43,7 @@ export class BooksController {
   }
 
   @Get()
-  getAll(@Query() query: BookQueryParams) {
+  getAll(@Query() query: GenreQueryParams) {
     return this.booksService.getAllBooks(query);
   }
 
@@ -114,11 +114,6 @@ export class BooksController {
     @Query() query: PaginationQueryParams,
   ) {
     return this.booksService.getBookmarksByBookId(id, query);
-  }
-
-  @Get('/genre')
-  getAllByGenre(@Query() query: GenreQueryParams) {
-    return this.booksService.getBooksByGenreName(query);
   }
 
   @Get('/:id')

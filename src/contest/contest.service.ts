@@ -24,6 +24,7 @@ import { CreateContestApplicationDto } from 'src/contest-application/dto/create-
 import { PatchContestApplicationDto } from 'src/contest-application/dto/update-contest-application.dto';
 import { CreateContestWinnerDto } from 'src/contest-winner/dto/create-contest-winner.dto';
 import { CreateContestModerationDto } from 'src/contest-moderation/dto/create-moderation.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ContestService {
@@ -65,11 +66,15 @@ export class ContestService {
     limit = ContestService.DEFAULT_LIMIT,
     offset = ContestService.DEFAULT_OFFSET,
     disabled = false,
+    search: title = '',
   }: VerifiedParams) {
     const contests = await this.contestRepository.findAndCountAll({
       distinct: true,
       where: {
         status: disabled,
+        title: {
+          [Op.iLike]: `%${title}%`,
+        },
       },
       limit,
       offset,

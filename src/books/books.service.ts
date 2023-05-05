@@ -73,13 +73,23 @@ export class BooksService {
     sort,
     order,
     disabled: verified = true,
-  }: BookQueryParams) {
+    genre = '',
+    search: title = '',
+  }: GenreQueryParams) {
     const books = await this.bookRepository.findAndCountAll({
       distinct: true,
-      where: { verified },
+      where: {
+        verified,
+        title: {
+          [Op.iLike]: `%${title}%`,
+        },
+      },
       limit,
       offset,
-      include: BooksService.includeObject,
+      include: [
+        ...BooksService.includeObject,
+        { model: Genre, where: { name: { [Op.iLike]: `%${genre}%` } } },
+      ],
     });
     return this.switchSorting(books, sort, order);
   }

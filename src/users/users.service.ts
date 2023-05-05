@@ -80,7 +80,6 @@ export class UsersService {
     let roles = await this.roleService.getAllRoles();
     if (role !== 'all') roles = roles.filter((r) => r.value === role);
     const range = roles.map((r) => r.id);
-    console.log(roles);
     const users = await this.userRepository.findAndCountAll({
       distinct: true,
       where: {

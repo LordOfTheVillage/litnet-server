@@ -3,7 +3,11 @@ export interface PaginationQueryParams {
   offset?: number;
 }
 
-export interface BookQueryParams extends PaginationQueryParams {
+export interface SearchQueryParams extends PaginationQueryParams {
+  search?: string;
+}
+
+export interface BookQueryParams extends SearchQueryParams {
   sort?: string;
   order?: string;
   disabled?: boolean;
