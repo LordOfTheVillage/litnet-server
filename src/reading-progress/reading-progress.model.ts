@@ -15,7 +15,7 @@ interface ReadingProgressCreationAttrs {
   pageId: number;
 }
 
-@Table({ tableName: 'readingProgress' })
+@Table({ tableName: 'reading-progress' })
 export class ReadingProgress extends Model<
   ReadingProgress,
   ReadingProgressCreationAttrs

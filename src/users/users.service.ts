@@ -12,7 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { FileService } from 'src/file/file.service';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { Contest } from 'src/contest/models/contest.model';
-import { Comment } from 'src/comment/comment.model';
+import { BookComment } from 'src/comment/comment.model';
 import { Book } from 'src/books/books.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import {
@@ -105,7 +105,7 @@ export class UsersService {
   async getUserById(id: number) {
     const user = await this.userRepository.findByPk(id, {
       include: [
-        { model: Comment, attributes: ['id'] },
+        { model: BookComment, attributes: ['id'] },
         { model: Contest, attributes: ['id'] },
         { model: Book, attributes: ['id'] },
         { model: Bookmark },
@@ -237,7 +237,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { [property]: value },
       include: [
-        { model: Comment, attributes: ['id'] },
+        { model: BookComment, attributes: ['id'] },
         { model: Contest, attributes: ['id'] },
         { model: Book, attributes: ['id'] },
         { model: Bookmark },

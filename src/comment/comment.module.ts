@@ -4,7 +4,7 @@ import { Book } from 'src/books/books.model';
 import { Rating } from 'src/rating/rating.model';
 import { User } from 'src/users/user.model';
 import { CommentController } from './comment.controller';
-import { Comment } from './comment.model';
+import { BookComment } from './comment.model';
 import { CommentService } from './comment.service';
 import { AuthModule } from 'src/auth/auth.module';
 
@@ -12,7 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [CommentController],
   providers: [CommentService],
   imports: [
-    SequelizeModule.forFeature([User, Book, Comment, Rating]),
+    SequelizeModule.forFeature([User, Book, BookComment, Rating]),
     AuthModule,
   ],
   exports: [CommentService],

@@ -10,7 +10,7 @@ import {
 } from 'sequelize-typescript';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
-import { Comment } from 'src/comment/comment.model';
+import { BookComment } from 'src/comment/comment.model';
 import { ContestApplication } from 'src/contest-application/contest-application.model';
 import { ContestWinner } from 'src/contest-winner/contest-winner.model';
 import { BookGenre } from 'src/genre/book-genre.model';
@@ -70,8 +70,8 @@ export class Book extends Model<Book, BookCreationAttrs> {
   @HasMany(() => Rating)
   ratings: Rating[];
 
-  @HasMany(() => Comment)
-  comments: Comment[];
+  @HasMany(() => BookComment)
+  comments: BookComment[];
 
   @HasMany(() => Chapter)
   chapters: Chapter[];

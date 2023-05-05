@@ -9,14 +9,14 @@ import {
 import { Book } from 'src/books/books.model';
 import { User } from 'src/users/user.model';
 
-interface CommentCreationAttrs {
+interface BookCommentCreationAttrs {
   text: string;
   userId: number;
   bookId: number;
 }
 
-@Table({ tableName: 'comments' })
-export class Comment extends Model<Comment, CommentCreationAttrs> {
+@Table({ tableName: 'book-comments' })
+export class BookComment extends Model<BookComment, BookCommentCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     unique: true,

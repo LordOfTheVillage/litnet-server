@@ -12,7 +12,7 @@ import { BlogComment } from 'src/blog-comment/blog-comment.model';
 import { Blog } from 'src/blog/blog.model';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Book } from 'src/books/books.model';
-import { Comment } from 'src/comment/comment.model';
+import { BookComment } from 'src/comment/comment.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 import { Contest } from 'src/contest/models/contest.model';
@@ -85,8 +85,8 @@ export class User extends Model<User, UserCreationAttrs> {
   @HasMany(() => Rating)
   ratings: Rating[];
 
-  @HasMany(() => Comment)
-  bookComments: Comment[];
+  @HasMany(() => BookComment)
+  bookComments: BookComment[];
 
   @HasMany(() => Bookmark)
   bookmarks: Bookmark[];

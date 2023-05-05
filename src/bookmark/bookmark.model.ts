@@ -16,7 +16,7 @@ interface BookmarkCreationAttrs {
   progressId: number;
 }
 
-@Table({ tableName: 'bookmark' })
+@Table({ tableName: 'bookmarks' })
 export class Bookmark extends Model<Bookmark, BookmarkCreationAttrs> {
   @Column({
     type: DataType.INTEGER,

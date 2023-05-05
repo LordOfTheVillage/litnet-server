@@ -9,7 +9,7 @@ import { BookGenre } from 'src/genre/book-genre.model';
 import { GenreModule } from 'src/genre/genre.module';
 import { FileModule } from 'src/file/file.module';
 import { Rating } from 'src/rating/rating.model';
-import { Comment } from 'src/comment/comment.model';
+import { BookComment } from 'src/comment/comment.model';
 import { ChapterModule } from 'src/chapter/chapter.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { RatingModule } from 'src/rating/rating.module';
@@ -29,7 +29,7 @@ import { BookmarkModule } from 'src/bookmark/bookmark.module';
       Genre,
       BookGenre,
       Rating,
-      Comment,
+      BookComment,
       Bookmark,
       ContestApplication,
     ]),

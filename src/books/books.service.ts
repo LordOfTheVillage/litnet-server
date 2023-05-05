@@ -9,7 +9,7 @@ import { Op } from 'sequelize';
 import { Bookmark } from 'src/bookmark/bookmark.model';
 import { Chapter } from 'src/chapter/chapter.model';
 import { ChapterService } from 'src/chapter/chapter.service';
-import { Comment } from 'src/comment/comment.model';
+import { BookComment } from 'src/comment/comment.model';
 import { CommentService } from 'src/comment/comment.service';
 import { FileService } from 'src/file/file.service';
 import { Genre } from 'src/genre/genre.model';
@@ -37,7 +37,7 @@ export class BooksService {
   private static includeObject = [
     { model: Genre, attributes: ['id', 'name'], through: { attributes: [] } },
     { model: Chapter, attributes: ['id', 'title', 'number'] },
-    { model: Comment, attributes: ['id'] },
+    { model: BookComment, attributes: ['id'] },
     { model: Rating, attributes: ['rating'] },
     { model: User, attributes: ['name'] },
     { model: Bookmark, attributes: ['id'] },

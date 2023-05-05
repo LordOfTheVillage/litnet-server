@@ -14,7 +14,7 @@ import { BookGenre } from './genre/book-genre.model';
 import { RatingModule } from './rating/rating.module';
 import { Rating } from './rating/rating.model';
 import { CommentModule } from './comment/comment.module';
-import { Comment } from './comment/comment.model';
+import { BookComment } from './comment/comment.model';
 import { ChapterModule } from './chapter/chapter.module';
 import { Chapter } from './chapter/chapter.model';
 import { PageModule } from './page/page.module';
@@ -64,7 +64,7 @@ import { ProducerApplication } from './producer-application/producer-application
         Genre,
         BookGenre,
         Rating,
-        Comment,
+        BookComment,
         Chapter,
         Page,
         ReadingProgress,
