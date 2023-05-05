@@ -16,6 +16,7 @@ import { Comment } from 'src/comment/comment.model';
 import { ContestComment } from 'src/contest-comment/contest-comment.model';
 import { ContestModeration } from 'src/contest-moderation/contest-moderation.model';
 import { Contest } from 'src/contest/models/contest.model';
+import { ProducerApplication } from 'src/producer-application/producer-application.model';
 import { Rating } from 'src/rating/rating.model';
 import { Role } from 'src/role/role.model';
 
@@ -74,6 +75,9 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasOne(() => Contest)
   contest: Contest;
+
+  @HasOne(() => ProducerApplication)
+  producerApplication: ProducerApplication;
 
   @HasMany(() => Book)
   books: Book[];

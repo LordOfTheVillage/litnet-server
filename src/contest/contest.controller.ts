@@ -33,7 +33,7 @@ import { RoleNames } from 'src/constants';
 export class ContestController {
   constructor(private contestService: ContestService) {}
 
-  @Roles(...Object.values(RoleNames))
+  @Roles(...Object.values(RoleNames).filter((r) => r !== RoleNames.USER))
   @UseGuards(RoleGuard)
   @Post()
   @UseInterceptors(FileInterceptor('img'))

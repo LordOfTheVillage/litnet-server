@@ -35,6 +35,7 @@ import { ContestCommentService } from 'src/contest-comment/contest-comment.servi
 import { ContestService } from 'src/contest/contest.service';
 import { RatingService } from 'src/rating/rating.service';
 import { RoleNames } from 'src/constants';
+import { ProducerApplication } from 'src/producer-application/producer-application.model';
 
 @Injectable()
 export class UsersService {
@@ -66,8 +67,7 @@ export class UsersService {
       img: fileName,
       roleId: role.id,
     });
-    await user.$set('role', role);
-    return user;
+    return await this.getUserById(user.id);
   }
 
   async getAllUsers({
@@ -110,6 +110,7 @@ export class UsersService {
         { model: Book, attributes: ['id'] },
         { model: Bookmark },
         { model: Role, attributes: ['value'] },
+        { model: ProducerApplication, attributes: ['id'] },
       ],
       attributes: { exclude: ['password'] },
     });
@@ -241,6 +242,7 @@ export class UsersService {
         { model: Book, attributes: ['id'] },
         { model: Bookmark },
         { model: Role, attributes: ['value'] },
+        { model: ProducerApplication, attributes: ['id'] },
       ],
     });
     return user;

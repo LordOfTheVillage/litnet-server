@@ -21,8 +21,8 @@ import { BookmarkModule } from 'src/bookmark/bookmark.module';
 import { BlogCommentModule } from 'src/blog-comment/blog-comment.module';
 import { BlogModule } from 'src/blog/blog.module';
 import { ContestCommentModule } from 'src/contest-comment/contest-comment.module';
-import { ContestModule } from 'src/contest/contest.module';
 import { RatingModule } from 'src/rating/rating.module';
+import { ProducerApplication } from 'src/producer-application/producer-application.model';
 
 @Module({
   controllers: [UsersController],
@@ -38,6 +38,7 @@ import { RatingModule } from 'src/rating/rating.module';
       ContestComment,
       Role,
       ContestModeration,
+      ProducerApplication,
     ]),
     forwardRef(() => AuthModule),
     BooksModule,

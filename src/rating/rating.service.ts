@@ -13,7 +13,7 @@ export class RatingService {
   constructor(@InjectModel(Rating) private ratingRepository: typeof Rating) {}
 
   async createRating(dto: CreateRatingDto) {
-    const ratingById = await await this.ratingRepository.findOne({
+    const ratingById = await this.ratingRepository.findOne({
       where: { userId: dto.userId, bookId: dto.bookId },
     });
     if (ratingById) {

@@ -32,7 +32,7 @@ export class RoleGuard implements CanActivate {
 
       if (bearer !== 'Bearer' || !token) {
         throw new UnauthorizedException({
-          message: 'Пользователь не авторизован',
+          message: 'User was not authorized',
         });
       }
 
